@@ -1,26 +1,48 @@
 package com.company;
 
+class Box{
+    private int status ;
+    private int YBox;
+    private int XBox;
+    private Box Neighbours[][];
+
+    Box(){
+        System.out.print("Box Created\n");
+    }
+    public int SetState(int val){}
+    public int SetNeighbour(){}
+    public int GetState(){}
+    public Box[][] GetNeighbor{}
+    public int IsTop(){}
+    public int IsBottom(){}
+    public int IsLeft(){}
+    public int IsRight(){}
+
+}
+
+
+
+class BusinessLogic {
+    BusinessLogic(){}
+    public void Start(){}
+    public void Stop(){}
+    public void MarkAlive(){}
+    public void MarkDead(){}
+    public int CheckBoundary(){}
+    public int CountAliveNeighbours(){}
+    public void NextGeneration(){}
+}
+
+class Game{
+    Game(){}
+
+}
+
+
+
 public class Main {
 
     public static void main(String[] args) {
-	    Employee e1= new ProjectManager();
-        Employee e2= new SoftwareEng();
-        Employee e3= new AssociateSoftwareEngineer();
-        Employee e4= new Internee();
-
-        e1.WorkOnProjects();
-        e2.WorkOnProjects();
-        e3.WorkOnProjects();
-        e4.WorkOnProjects();
-
-        e1.HaveBenefits();
-        e2.HaveBenefits();
-        e3.HaveBenefits();
-        e4.HaveBenefits();
-
-        e1.TakeInterview();
-        e2.TakeInterview();
-        e3.TakeInterview();
-        e4.TakeInterview();
+	// write your code here
     }
 }
