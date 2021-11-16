@@ -10,16 +10,18 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.*;
 
  	public class UserInterface extends javax.swing.JFrame {
+
     
 	//buttons and jpanel
     private Button Start_Button;
     private Button Reset_Button;
     private javax.swing.JPanel Panel;
     
-    int width = 200;
-    int height = 100;
+    int width = 400;
+    int height = 300;
     
     //arrays to store current and next state/generation
     int[][] Current_State = new int[height][width];
@@ -46,11 +48,12 @@ import java.awt.event.ActionEvent;
     private void initComponents() {
     	//initialize panel and buttons
         Panel = new javax.swing.JPanel();
-        Start_Button = new Button("Start");
-        Reset_Button =  new Button("Reset");
-
+        	
+        Start_Button = new Button("Start","#d3d3d3","#d3d3d3");
+        Reset_Button =  new Button("Reset","#d3d3d3","#d3d3d3");
+        this.getContentPane().setBackground( Color.decode("#3b444b") ); 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
+       // this.getContentPane().setBackground(Color.PINK);
         Panel.setBackground(new java.awt.Color(102, 102, 102));
         //set mouse actions
         Panel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -88,7 +91,7 @@ import java.awt.event.ActionEvent;
             }
         });
 
-        
+       
         Reset_Button.Get_Button().addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
