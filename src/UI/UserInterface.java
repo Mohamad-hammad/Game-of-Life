@@ -12,20 +12,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
 
- 	public class UserInterface extends javax.swing.JFrame {
+    public class UserInterface extends javax.swing.JFrame {
 
     
-	//buttons and jpanel
+    //buttons and jpanel
     private Button Start_Button;
     private Button Reset_Button;
+    private Button Next_Button;
+    private Button ViewStates_Button;
+    private Button SaveStates_Button;
     private javax.swing.JPanel Panel;
-    
+    private ViewStates SavedStates;
     int width = 400;
     int height = 300;
     
     //arrays to store current and next state/generation
     int[][] Current_State = new int[height][width];
-    int[][]	Next_State = new int[height][width];
+    int[][] Next_State = new int[height][width];
     //variable to check if play button is clicked or not
     boolean Is_Playing;
     //Image and graphics object to draw the grid
@@ -46,11 +49,15 @@ import java.awt.*;
  
     @SuppressWarnings("unchecked")
     private void initComponents() {
-    	//initialize panel and buttons
+        //initialize panel and buttons
         Panel = new javax.swing.JPanel();
-        	
+            
         Start_Button = new Button("Start","#d3d3d3","#d3d3d3");
         Reset_Button =  new Button("Reset","#d3d3d3","#d3d3d3");
+        Next_Button = new Button("Next","#d3d3d3","#d3d3d3");
+        ViewStates_Button= new Button("View States","#d3d3d3","#d3d3d3");
+        SaveStates_Button= new Button("Save State","#d3d3d3","#d3d3d3");
+        SavedStates=null;
         this.getContentPane().setBackground( Color.decode("#3b444b") ); 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
        // this.getContentPane().setBackground(Color.PINK);
@@ -75,12 +82,12 @@ import java.awt.*;
         //set layout
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(Panel);
         jPanel1Layout.setHorizontalGroup(
-        	jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        		.addGap(0, 485, Short.MAX_VALUE)
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                .addGap(0, 485, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
-        	jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        		.addGap(0, 293, Short.MAX_VALUE)
+            jPanel1Layout.createParallelGroup(Alignment.LEADING)
+                .addGap(0, 293, Short.MAX_VALUE)
         );
         Panel.setLayout(jPanel1Layout);
 
@@ -97,6 +104,12 @@ import java.awt.*;
                 jButton2ActionPerformed(evt);
             }
         });
+        ViewStates_Button.Get_Button().addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ViewStatesActionPerformed(evt);
+            }
+        });
+        
         //set layout
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,6 +121,13 @@ import java.awt.*;
                     .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(Start_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10)
+                        //.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1, Short.MAX_VALUE)
+                        .addComponent(Next_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10)                      
+                        .addComponent(ViewStates_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10)
+                        .addComponent(SaveStates_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 323, Short.MAX_VALUE)
                         .addComponent(Reset_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -120,7 +140,11 @@ import java.awt.*;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Start_Button.Get_Button())
+                    .addComponent(Next_Button.Get_Button())
+                    .addComponent(ViewStates_Button.Get_Button())
+                    .addComponent( SaveStates_Button.Get_Button())
                     .addComponent(Reset_Button.Get_Button()))
+                
                 .addContainerGap())
         );
 
@@ -128,7 +152,7 @@ import java.awt.*;
     }
     
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {
-    	  int j = width * evt.getX() / Panel.getWidth();
+          int j = width * evt.getX() / Panel.getWidth();
           int i = height * evt.getY() / Panel.getHeight();
           if(SwingUtilities.isLeftMouseButton(evt)){
               Current_State[i][j] = 1;
@@ -151,6 +175,12 @@ import java.awt.*;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         Current_State = new int[height][width];
         grid.DrawGrid(Panel, width, height, Current_State);
+    }
+    private void ViewStatesActionPerformed(java.awt.event.ActionEvent evt)
+    {
+        
+            SavedStates=new ViewStates();
+            SavedStates.GetFrame().setVisible(true);
     }
 
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {
