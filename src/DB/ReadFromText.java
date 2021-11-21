@@ -1,3 +1,5 @@
+package DB;
+
 import java.io.FileNotFoundException; // Import this class to handle errors
 import java.util.Queue;
 import java.util.Scanner; // Import the Scanner class to read text files
