@@ -20,8 +20,8 @@ import java.awt.*;
     private Button Reset_Button;
     private javax.swing.JPanel Panel;
     
-    int width = 400;
-    int height = 300;
+    int width = 30;
+    int height = 40;
     
     //arrays to store current and next state/generation
     int[][] Current_State = new int[height][width];
