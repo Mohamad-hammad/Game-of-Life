@@ -93,66 +93,66 @@ public class Game {
 		neighbors[7][0] = box.GetX()+1; 
 		neighbors[7][1] = box.GetY()+1;
 	  
-		if (box.IsLeft() && box.IsTop())
-		{ 
-			neighbors[0][0] = -1; 
-			neighbors[1][0] = -1;
-			neighbors[2][0] = -1; 
-			neighbors[3][0] = -1;
-			neighbors[5][0] = -1; }
-		else if (box.IsRight(401) && box.IsTop())
-		{
-			neighbors[0][0] = -1; 
-			neighbors[1][0] = -1;
-			neighbors[2][0] = -1;
-			neighbors[4][0] = -1;
-			neighbors[7][0] = -1;
-		}
-		else if (box.IsLeft() && box.IsBottom(301))
-		{ 
-			neighbors[0][0] = -1;
-			neighbors[3][0] = -1;
-			neighbors[5][0] = -1;
-			neighbors[6][0] = -1;
-			neighbors[7][0] = -1;
-		}
+		// if (box.IsLeft() && box.IsTop())
+		// { 
+			// neighbors[0][0] = -1; 
+			// neighbors[1][0] = -1;
+			// neighbors[2][0] = -1; 
+			// neighbors[3][0] = -1;
+			// neighbors[5][0] = -1; }
+		// else if (box.IsRight(401) && box.IsTop())
+		// {
+			// neighbors[0][0] = -1; 
+			// neighbors[1][0] = -1;
+			// neighbors[2][0] = -1;
+			// neighbors[4][0] = -1;
+			// neighbors[7][0] = -1;
+		// }
+		// else if (box.IsLeft() && box.IsBottom(301))
+		// { 
+			// neighbors[0][0] = -1;
+			// neighbors[3][0] = -1;
+			// neighbors[5][0] = -1;
+			// neighbors[6][0] = -1;
+			// neighbors[7][0] = -1;
+		// }
 	  
-		else if (box.IsRight(401) && box.IsBottom(301)) 
-		{ 
-			neighbors[2][0] = -1;
-			neighbors[4][0] = -1; 
-			neighbors[5][0] = -1; 
-			neighbors[6][0] = -1;
-			neighbors[7][0] = -1;
-		}
+		// else if (box.IsRight(401) && box.IsBottom(301)) 
+		// { 
+			// neighbors[2][0] = -1;
+			// neighbors[4][0] = -1; 
+			// neighbors[5][0] = -1; 
+			// neighbors[6][0] = -1;
+			// neighbors[7][0] = -1;
+		// }
 	  
-		else if (box.IsTop()) 
-		{ 
-			neighbors[0][0] = -1;
-			neighbors[1][0] = -1;
-			neighbors[2][0] = -1;
-		}
+		// else if (box.IsTop()) 
+		// { 
+			// neighbors[0][0] = -1;
+			// neighbors[1][0] = -1;
+			// neighbors[2][0] = -1;
+		// }
 	  
-		else if (box.IsLeft()) 
-		{ 
-			neighbors[0][0] = -1; 
-			neighbors[3][0] = -1;
-			neighbors[5][0] = -1; 
-		}
+		// else if (box.IsLeft()) 
+		// { 
+			// neighbors[0][0] = -1; 
+			// neighbors[3][0] = -1;
+			// neighbors[5][0] = -1; 
+		// }
 	  
-		if (box.IsRight(401))
-		{
-			neighbors[2][0] = -1; 
-			neighbors[4][0] = -1;
-			neighbors[8][0] = -1; 
-		}
+		// if (box.IsRight(401))
+		// {
+			// neighbors[2][0] = -1; 
+			// neighbors[4][0] = -1;
+			// neighbors[8][0] = -1; 
+		// }
 	  
-		else if (box.IsBottom(301)) 
-		{ 
-			neighbors[5][0] = -1; 
-			neighbors[6][0] = -1;
-			neighbors[7][0] = -1; 
-		}
+		// else if (box.IsBottom(301)) 
+		// { 
+			// neighbors[5][0] = -1; 
+			// neighbors[6][0] = -1;
+			// neighbors[7][0] = -1; 
+		// }
 	  
 		return neighbors; 
 	  
