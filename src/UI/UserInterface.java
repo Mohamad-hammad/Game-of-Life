@@ -5,9 +5,13 @@ import java.util.TimerTask;
 import java.awt.Image;
 import java.awt.Graphics;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -15,10 +19,10 @@ import java.awt.*;
 
     public class UserInterface    {
 
-    //Remvoe this ---------------------
+    
         
     boolean play;
-    //Remove this -------------------------
+   
     //buttons and jpanel
     private Button Start_Button;
     private Button Reset_Button;
@@ -27,7 +31,9 @@ import java.awt.*;
     private Button SaveStates_Button;
     private javax.swing.JPanel Panel;
     private ViewStates SavedStates;
+    private JLabel counter;
     private Image offScrImg;
+    private JSlider speed_slider;
     private Graphics offScrGraph;
     int width = 400;
     int height = 300;
@@ -37,31 +43,16 @@ import java.awt.*;
     int[][] Next_State = new int[height][width];
     //variable to check if play button is clicked or not
     boolean Is_Playing;
-    //Image and graphics object to draw the grid
-//    Image Image_OffScreen;
-//    Graphics Graph_OffScreen;
     Grid grid;
-    
+    double generations=60;
     public UserInterface() {
         initComponents();
         offScrImg = frame.createImage(Panel.getWidth(), Panel.getHeight());
         offScrGraph = offScrImg.getGraphics();
-//        Image_OffScreen = createImage(Panel.getWidth(), Panel.getHeight());
-//        Graph_OffScreen = Image_OffScreen.getGraphics();
         //create and draw grid
         grid = new Grid();        
+        counter.setText(String.valueOf(generations));
        
-        //Revmoe this --------------------------------------
-        Timer time = new Timer();
-        TimerTask task = new TimerTask(){
-            public void run(){
-           
-                    Playthegame();
-            }
-        };
-        time.scheduleAtFixedRate(task, 0, 100);
-        
-        //Remove this------------------------------------------
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     
     }
@@ -70,60 +61,7 @@ import java.awt.*;
         return frame;
     }
     
-    //Remvoe this--------------------------------------------------
-  
-    private int decide(int i, int j){
-        int neighbors = 0;
-        if(j > 0){
-            if(Current_State[i][j-1]==1) neighbors++;
-            if(i>0) if(Current_State[i-1][j-1]==1) neighbors++;
-            if(i<height-1) if(Current_State[i+1][j-1]==1) neighbors++;
-        }
-        if(j < width-1){
-            if(Current_State[i][j+1]==1) neighbors++;
-            if(i>0) if(Current_State[i-1][j+1]==1) neighbors++;
-            if(i<height-1) if(Current_State[i+1][j+1]==1) neighbors++;
-        }
-        if(i>0) if(Current_State[i-1][j]==1) neighbors++;
-        if(i<height-1) if(Current_State[i+1][j]==1) neighbors++;
-        if(neighbors == 3) return 1;
-        if(Current_State[i][j]==1 && neighbors == 2) return 1;
-        return 0;
-    }
-    
-    void PlayNext()
-    {
-          for(int i = 0; i < height; i++){
-              for(int j = 0; j < width; j++){
-                Next_State[i][j] = decide(i,j);
-              }
-          }
-          for(int i = 0; i < height; i++){
-              for(int j = 0; j < width; j++){
-                Current_State[i][j] = Next_State[i][j];
-              }
-          }
-          grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-    }
-    void Playthegame()
-    {
-         Is_Playing = play;
-        if(play){
-            for(int i = 0; i < height; i++){
-                for(int j = 0; j < width; j++){
-                    Next_State[i][j] = decide(i,j);
-                }
-            }
-            for(int i = 0; i < height; i++){
-                for(int j = 0; j < width; j++){
-                    Current_State[i][j] = Next_State[i][j];
-                }
-            }
-            grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-        }
-    }
-    
-    //Remove this ----------------------------------------------
+   
  
     @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -137,6 +75,9 @@ import java.awt.*;
         ViewStates_Button= new Button("View States","#d3d3d3","#d3d3d3");
         SaveStates_Button= new Button("Save State","#d3d3d3","#d3d3d3");
         SavedStates=null;
+        counter=new JLabel();
+        counter.setBackground(Color.white);
+        counter.setOpaque(true);
         frame.getContentPane().setBackground( Color.decode("#3b444b") ); 
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
        // this.getContentPane().setBackground(Color.PINK);
@@ -212,6 +153,8 @@ import java.awt.*;
                         .addGap(10)
                         .addComponent(SaveStates_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 323, Short.MAX_VALUE)
+                        .addComponent(counter, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10)
                         .addComponent(Reset_Button.Get_Button(), javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -226,6 +169,7 @@ import java.awt.*;
                     .addComponent(Next_Button.Get_Button())
                     .addComponent(ViewStates_Button.Get_Button())
                     .addComponent( SaveStates_Button.Get_Button())
+                    .addComponent(counter)
                     .addComponent(Reset_Button.Get_Button()))
                 
                 .addContainerGap())
@@ -266,7 +210,10 @@ import java.awt.*;
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         Current_State = new int[height][width];
+        
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+        generations=0;
+        counter.setText(String.valueOf(generations));
     }
     private void ViewStatesActionPerformed(java.awt.event.ActionEvent evt)
     {

@@ -6,12 +6,9 @@ import javax.swing.border.EmptyBorder;
 
 import java.util.*;
 public class Grid extends JFrame{
-//  Image Image_OffScreen;
-//    Graphics Graph_OffScreen;
     public Grid()
     {
         
-        //DrawGrid( panel, offScrImg, offScrGraph, width, height);
     }
     public void DrawGrid(JPanel panel,Image Image_OffScreen,Graphics Graph_OffScreen,int width,int height,int [][]CurrentState){
         pack();
