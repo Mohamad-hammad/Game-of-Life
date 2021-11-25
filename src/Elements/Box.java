@@ -1,4 +1,4 @@
-package Elements;
+package com.company;
 
 public class Box {
     private boolean state;
@@ -12,65 +12,65 @@ public class Box {
     }
     public Box(int x, int y)
     {
-    	state = false;
-    	XBox = x;
-    	YBox = y;
-    	System.out.println("Box with " + x + "," + y +" Created");
+        state = false;
+        XBox = x;
+        YBox = y;
+        System.out.println("Box with" + x + "," + y +" Created");
     }
     public void SetCoordinates(int x, int y)
     {
-    	XBox = x;
-    	YBox = y;
+        XBox = x;
+        YBox = y;
     }
     public int GetX()
     {
-    	return XBox;
+        return XBox;
     }
     public int GetY()
     {
-    	return YBox;
+        return YBox;
     }
     public void SetAlive()
     {
-    	state = true;
+        state = true;
     }
     public void SetDead()
     {
-    	state = false;
+        state = false;
     }
     public boolean IsAlive()
     {
-    	if (state == true)
-    		return true;
-    	else return false;
+        if (state == true)
+            return true;
+        else return false;
     }
     public boolean GetState()
     {
-    	return state;
+        return state;
     }
     public boolean IsTop()
     {
-    	if (YBox == 0)
-    		return true;
-    	else return false;
+        if (YBox == 0)
+            return true;
+        else return false;
     }
     public boolean IsBottom(int height)
     {
-    	if (YBox == height)
-    		return true;
-    	else return false;
+        if (YBox == height)
+            return true;
+        else return false;
     }
     public boolean IsLeft()
     {
-    	if (XBox == 0)
-    		return true;
-    	else return false;
+        if (XBox == 0)
+            return true;
+        else return false;
     }
     public boolean IsRight(int width)
     {
-    	if (XBox == width)
-    		return true;
-    	else return false;
+        if (XBox == width)
+            return true;
+        else return false;
     }
 
 }
