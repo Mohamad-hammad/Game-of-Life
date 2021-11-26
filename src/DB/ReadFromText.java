@@ -7,25 +7,13 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.File;
 import java.util.LinkedList;
+import java.sql.*;
 
-// interface
-interface DBInterface {
-    public void Save(int Box_Row, int Box_Column, int Box[][], int save_id, int Counter, String FilePath); // interface
-                                                                                                           // method
-                                                                                                           // (does not
-                                                                                                           // have a
-                                                                                                           // body)
-
-    public void Load(int Box_Row, int Box_Column, int Box[][], int save_id, int Counter, String FilePath); // interface
-                                                                                                           // method
-                                                                                                           // (does not
-                                                                                                           // have a
-                                                                                                           // body)
-}
 
 public class ReadFromText implements DBInterface {
 
-    public void Save(int Box_Row, int Box_Column, int Box[][], int save_id, int Counter, String FilePath) {
+    public void Save(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[], String FilePath)
+            throws SQLException { // interface method (does not have a body)
 
         Queue<String> q = new LinkedList<>();
 
@@ -54,11 +42,12 @@ public class ReadFromText implements DBInterface {
 
             out.append("--------------------------" + "\n\n");
             out.append("Save_id		: " + Integer.toString(save_id) + "\n");
-            out.append("Grid_Size	: " + Integer.toString(Box_Row) + "x" + Integer.toString(Box_Column) + "\n");
-            out.append("Counter		: " + Integer.toString(Counter) + "\n\n");
+            out.append("BOX ROWs,Colums	: " + Integer.toString(Box_Row[0]) + "x" + Integer.toString(Box_Column[0])
+                    + "\n");
+            out.append("Counter		: " + Integer.toString(Counter[0]) + "\n\n");
 
-            for (int i = 0; i < Box_Row; i++) {
-                for (int j = 0; j < Box_Column; j++) {
+            for (int i = 0; i < Box_Row[0]; i++) {
+                for (int j = 0; j < Box_Column[0]; j++) {
                     out.append(Integer.toString(Box[i][j]) + " ");
                 }
                 out.append("\n");
@@ -95,7 +84,8 @@ public class ReadFromText implements DBInterface {
 
     }
 
-    public void Load(int Box_Row, int Box_Column, int Box[][], int save_id, int Counter, String FilePath) {
+    public void Load(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[], String FilePath)
+            throws SQLException { // interface method (does not have a body)
 
         try {
             File myObj = new File(FilePath);
@@ -109,16 +99,43 @@ public class ReadFromText implements DBInterface {
             myReader.nextLine();
             data1 = myReader.nextLine();
             data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
-            save_id = Integer.parseInt(new String(data1));
 
+            int save_id1;
+            save_id1 = Integer.parseInt(new String(data1));
+
+            boolean breaker = false;
+
+            for (; breaker != true;) {
+
+                if (save_id1 == save_id) {
+                    breaker = true;
+                } else {
+
+                    data1 = myReader.nextLine();
+                    data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+                    Box_Row[0] = Integer.parseInt(new String(data1.substring(0, data1.indexOf('x'))));
+
+                    myReader.nextLine();myReader.nextLine();
+                    
+                    for(int i=0;i<Box_Row[0];i++,myReader.nextLine());
+                    
+                    myReader.nextLine();myReader.nextLine(); myReader.nextLine();
+                    myReader.nextLine();myReader.nextLine(); myReader.nextLine();
+
+                    data1 = myReader.nextLine();
+                    data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+                    save_id1 = Integer.parseInt(new String(data1));
+
+                }
+            }
             // ----
 
             // For input of Grid_Size
 
             data1 = myReader.nextLine();
             data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
-            Box_Row = Integer.parseInt(new String(data1.substring(0, data1.indexOf('x'))));
-            Box_Column = Integer.parseInt(new String(data1.substring(data1.indexOf('x') + 1, data1.length())));
+            Box_Row[0] = Integer.parseInt(new String(data1.substring(0, data1.indexOf('x'))));
+            Box_Column[0] = Integer.parseInt(new String(data1.substring(data1.indexOf('x') + 1, data1.length())));
 
             // ----
 
@@ -126,7 +143,7 @@ public class ReadFromText implements DBInterface {
 
             data1 = myReader.nextLine();
             data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
-            Counter = Integer.parseInt(new String(data1));
+            Counter[0] = Integer.parseInt(new String(data1));
 
             // ----
 
@@ -137,13 +154,13 @@ public class ReadFromText implements DBInterface {
             // Here, Initialize the Box-2d by loading Box_Row and Box_Column from File.
             // this will create an Array with respect to file Box_Row and Box_Column
 
-            Box = new int[Box_Row][Box_Column];
+        //    Box = new int[Box_Row[0]][Box_Column[0]];
 
             // ---
 
-            for (int i = 0; i < Box_Row; i++) {
+            for (int i = 0; i < Box_Row[0]; i++) {
                 data1 = myReader.nextLine();
-                for (int j = 0; j < Box_Column; j++) {
+                for (int j = 0; j < Box_Column[0]; j++) {
 
                     char c = data1.charAt(j + j);
                     int number = c - '0';
@@ -160,10 +177,10 @@ public class ReadFromText implements DBInterface {
 
     }
 
-/* Main is added for testing
+    // Main is added for testing
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
+/*
         // Set FilePath
         String FilePath = "C:\\Users\\abdul\\OneDrive\\Desktop\\File.txt";
         // ------
@@ -176,11 +193,30 @@ public class ReadFromText implements DBInterface {
 
         int[] box_Row = new int[] { 3 };
         int[] box_Column = new int[] { 6 };
-        int[] save_id = new int[] { 5 };
+        int[] save_id = new int[] { 15 };
         int[] Counter = new int[] { 100 };
 
         int[][] BOX = new int[box_Row[0]][box_Column[0]];
 
+        R_Obj.Load(box_Row, box_Column, BOX, save_id[0], Counter, FilePath);
+        
+        // To test wheather it wheather it is load correctly.
+
+        System.out.println("--------------------------\n");
+        System.out.println("Saveid      :" + save_id[0]);
+        System.out.println("Counter      :" + Counter[0]);
+
+        for (int i = 0; i < box_Row[0]; i++) {
+            for (int j = 0; j < box_Column[0]; j++) {
+                System.out.print(BOX[i][j] + " ");
+            }
+
+            System.out.println();
+        }
+
+
+
+        
         BOX[0][0] = 0;
         BOX[0][1] = 0;
         BOX[0][2] = 1;
@@ -200,32 +236,22 @@ public class ReadFromText implements DBInterface {
         BOX[2][4] = 0;
         BOX[2][5] = 0;
 
-        R_Obj.Save(box_Row[0], box_Column[0], BOX, save_id[0], Counter[0], FilePath);
+
+
+      //  R_Obj.Save(box_Row, box_Column, BOX, save_id[0], Counter, FilePath);
 
         // ----------------------------------------------
 
-        // After saving we want to load it as:
 
-        R_Obj.Load(box_Row[0], box_Column[0], BOX, save_id[0], Counter[0], FilePath);
 
-        // To test wheather it wheather it is load correctly.
 
-        System.out.println("--------------------------\n");
-        System.out.println("Saveid      :" + save_id[0]);
-        System.out.println("Counter      :" + Counter[0]);
 
-        for (int i = 0; i < box_Row[0]; i++) {
-            for (int j = 0; j < box_Column[0]; j++) {
-                System.out.print(BOX[i][j] + " ");
-            }
-
-            System.out.println();
-        }
+        
 
         // One thing is that .. their is difficulty to pass by reference in java. Load
         // function
         // works but the when you pass an array with new keyword.
-
+        */
     }
- */   
+
 }
