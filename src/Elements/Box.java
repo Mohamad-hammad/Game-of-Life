@@ -1,4 +1,4 @@
-package com.company;
+package Elements;
 
 public class Box {
     private boolean state;
@@ -38,39 +38,14 @@ public class Box {
     {
         state = false;
     }
-    public boolean IsAlive()
-    {
-        if (state == true)
-            return true;
-        else return false;
-    }
+//    public boolean IsAlive()
+//    {
+//        if (state == true)
+//            return true;
+//        else return false;
+//    }
     public boolean GetState()
     {
         return state;
     }
-    public boolean IsTop()
-    {
-        if (YBox == 0)
-            return true;
-        else return false;
-    }
-    public boolean IsBottom(int height)
-    {
-        if (YBox == height)
-            return true;
-        else return false;
-    }
-    public boolean IsLeft()
-    {
-        if (XBox == 0)
-            return true;
-        else return false;
-    }
-    public boolean IsRight(int width)
-    {
-        if (XBox == width)
-            return true;
-        else return false;
-    }
-
-}
+  }

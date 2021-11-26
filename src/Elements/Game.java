@@ -1,9 +1,10 @@
-package com.company;
+package Elements;
 public class Game {
 	int CurrentX =20;
 	int CurrentY =20;
 	boolean flag = true;
 	Box grid[][] = new Box[CurrentY][CurrentX];
+	int current[][] = new int[CurrentY][CurrentX];
 	int time_lapse; // Speed variable
 
 	public Game() {
@@ -18,7 +19,8 @@ public class Game {
 		SetInitStates();
 		System.out.println();
 		System.out.println("Alive Initially: ");
-		PrintAlive();
+		
+		//PrintAlive();
 		//Next();
 		//System.out.println();
 		//System.out.println("Alive After: ");
@@ -29,14 +31,14 @@ public class Game {
 	}
 
 	void SetInitStates() {
+		grid[15][14].SetAlive();
 		grid[15][15].SetAlive();
-		grid[15][16].SetAlive();
 
-		grid[16][15].SetAlive();
+		grid[15][16].SetAlive();
 		//grid[151][151].SetAlive();
 	}
 
-	void Next()
+	public void Next()
 	{
 		System.out.println("Next() Called: \n");
 		try
@@ -47,21 +49,26 @@ public class Game {
 			// this part is executed when an exception (in this example InterruptedException) occurs
 			System.out.println("Error in sleep \n");
 		}
-		int ALive_Counter = 0;
 		while (flag)
 		{
 			for (int i = 1; i < CurrentY-1; i++)
 			{
 				for (int j = 1; j < CurrentX-1; j++)
 				{
-					ALive_Counter =  CountAlive(GetNeighbors(grid[i][j]));
-					if (ALive_Counter == 1 || ALive_Counter == 0) // Under Population
+					current[i][j] = CountAlive(GetNeighbors(grid[i][j]));
+				}
+			}
+			for (int i = 1; i < CurrentY-1; i++)
+			{
+				for (int j = 1; j < CurrentX-1; j++)
+				{
+					if (current[i][j] == 1 || current[i][j] == 0) // Under Population
 						grid[i][j].SetDead();
-					else if(ALive_Counter >= 4) // Over Population
+					else if(current[i][j] >= 4) // Over Population
 						grid[i][j].SetDead();
-					else if(ALive_Counter == 2 || ALive_Counter == 3)	//Populated
+					else if(current[i][j] == 2 || current[i][j] == 3)	//Populated
 					{
-						if (grid[i][j].GetState() == false && ALive_Counter == 3)
+						if (grid[i][j].GetState() == false && current[i][j] == 3)
 						{
 							grid[i][j].SetAlive();
 						}
@@ -110,9 +117,6 @@ public class Game {
 
 	}
 
-
-
-
 	int[][] GetNeighbors(Box box)
 	{
 		int[][] neighbors = new int[8][2];
@@ -140,67 +144,6 @@ public class Game {
 		neighbors[7][0] = box.GetX()+1;
 		neighbors[7][1] = box.GetY()+1;
 
-		// if (box.IsLeft() && box.IsTop())
-		// {
-		// neighbors[0][0] = -1;
-		// neighbors[1][0] = -1;
-		// neighbors[2][0] = -1;
-		// neighbors[3][0] = -1;
-		// neighbors[5][0] = -1; }
-		// else if (box.IsRight(401) && box.IsTop())
-		// {
-		// neighbors[0][0] = -1;
-		// neighbors[1][0] = -1;
-		// neighbors[2][0] = -1;
-		// neighbors[4][0] = -1;
-		// neighbors[7][0] = -1;
-		// }
-		// else if (box.IsLeft() && box.IsBottom(301))
-		// {
-		// neighbors[0][0] = -1;
-		// neighbors[3][0] = -1;
-		// neighbors[5][0] = -1;
-		// neighbors[6][0] = -1;
-		// neighbors[7][0] = -1;
-		// }
-
-		// else if (box.IsRight(401) && box.IsBottom(301))
-		// {
-		// neighbors[2][0] = -1;
-		// neighbors[4][0] = -1;
-		// neighbors[5][0] = -1;
-		// neighbors[6][0] = -1;
-		// neighbors[7][0] = -1;
-		// }
-
-		// else if (box.IsTop())
-		// {
-		// neighbors[0][0] = -1;
-		// neighbors[1][0] = -1;
-		// neighbors[2][0] = -1;
-		// }
-
-		// else if (box.IsLeft())
-		// {
-		// neighbors[0][0] = -1;
-		// neighbors[3][0] = -1;
-		// neighbors[5][0] = -1;
-		// }
-
-		// if (box.IsRight(401))
-		// {
-		// neighbors[2][0] = -1;
-		// neighbors[4][0] = -1;
-		// neighbors[8][0] = -1;
-		// }
-
-		// else if (box.IsBottom(301))
-		// {
-		// neighbors[5][0] = -1;
-		// neighbors[6][0] = -1;
-		// neighbors[7][0] = -1;
-		// }
-
 		return neighbors;
 
 	}
@@ -224,7 +167,8 @@ public class Game {
 		return count;
 	}
 
-	void PrintAlive() {
+	public void PrintAlive() 
+	{
 		for (int i = 0; i < CurrentY; i++) {
 			for (int j = 0; j < CurrentX; j++) {
 				if (grid[i][j].GetState() == true) {
@@ -236,7 +180,8 @@ public class Game {
 		}
 	}
 
-	void Print(Box box) {
+	void Print(Box box) 
+	{
 		System.out.println();
 		System.out.println("X: " + box.GetX());
 		System.out.println("X: " + box.GetY());
