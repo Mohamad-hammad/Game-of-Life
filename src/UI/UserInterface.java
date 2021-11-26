@@ -205,7 +205,7 @@ import java.awt.*;
         Is_Playing=play;
         if(!Is_Playing)
         {
-            PlayNext();
+            //PlayNext();
         }
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
