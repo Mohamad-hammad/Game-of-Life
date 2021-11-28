@@ -4,6 +4,13 @@ import java.sql.*;
 
 
 public class ReadFromDB implements DBInterface {
+    
+    public int[] viewSaveId(String FilePath )throws SQLException{
+        int arr[]={0};
+        return arr;
+    }
+
+
     public void Load(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[], String FilePath) throws SQLException {
         Connection connection = DriverManager.getConnection(FilePath);
 
