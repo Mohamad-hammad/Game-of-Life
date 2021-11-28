@@ -17,6 +17,7 @@ public interface BL_Interface {
 	int[][] GetNeighbors(Box box);
 	
 	public int[][] BoxToInt();
+	public void IntToBox(int grid_int[][]);
 	int CountAlive(int[][] neighbors);
 
 	public void PrintAlive() ;

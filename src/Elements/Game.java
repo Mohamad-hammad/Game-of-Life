@@ -247,6 +247,26 @@ public class Game implements BL_Interface {
 	}
 	
 	@Override
+	public void IntToBox(int grid_int[][])
+	{
+		for (int i = 0; i < CurrentY; i++)
+		{
+			for (int j = 0; j < CurrentX; j++)
+			{
+				if (grid_int[i][j] == 1)
+				{
+					grid[i][j].SetAlive();
+				}
+				else
+				{
+					grid[i][j].SetDead();
+				}
+			}
+		}
+		
+	}
+	
+	@Override
 	public void Print(Box box) 
 	{
 		System.out.println();
