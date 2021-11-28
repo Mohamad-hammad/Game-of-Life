@@ -7,7 +7,8 @@ public class Main {
     {
     	BL_Interface g1 = new Game();
  		g1.PrintAlive();
- 		g1.Next();
+ 		//g1.Next();
+ 		g1.Reset();
     }
 }
 
