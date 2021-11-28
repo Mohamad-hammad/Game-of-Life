@@ -117,15 +117,15 @@ public class Game implements BL_Interface {
 		
 	}
 	@Override
-	public void Draw() {
-		
+	public void Draw(int x, int y) {//set these cordinate box as alive
+		grid[x][y].SetAlive();
 	}
 	//-------------------------add flag for Interrupt
 	@Override
-	public void Play()
+	public void Play(boolean flag)
 	{
 		int ALive_Counter = 0;
-		while (true)
+		while (flag)
 		{
 			for (int i = 1; i < CurrentY-1; i++)
 			{

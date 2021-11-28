@@ -10,9 +10,9 @@ public interface BL_Interface {
 	public void Reset(); 
 	public void ViewSavedStates();
 	public void DeleteStates();
-	public void Draw();
+	public void Draw(int x, int y);
 	//-------------------------add flag for Interrupt
-	void Play();
+	void Play(boolean flag);
 	
 	int[][] GetNeighbors(Box box);
 	
