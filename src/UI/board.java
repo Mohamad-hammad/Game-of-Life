@@ -60,6 +60,7 @@ public class board {
     public void setAlive(int x, int y)
     {
         box[x-1][y-1]=" * ";
+        current[x-1][y-1]=1;
     }
     public final static void clearConsole()
     {
