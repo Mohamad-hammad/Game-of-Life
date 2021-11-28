@@ -17,6 +17,12 @@ public class Box {
         YBox = y;
         System.out.println("Box with" + x + "," + y +" Created");
     }
+    public Box(Box box)
+    {
+    	this.state = box.state;
+    	this.YBox = box.YBox;
+    	this.XBox = box.XBox;
+    }
     public void SetCoordinates(int x, int y)
     {
         XBox = x;
