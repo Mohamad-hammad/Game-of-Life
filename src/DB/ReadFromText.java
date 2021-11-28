@@ -415,6 +415,4 @@ public class ReadFromText implements DBInterface {
         // works but the when you pass an array with new keyword.
 
     }
-*/
 
-}
