@@ -9,7 +9,8 @@ public class Game implements BL_Interface {
 	int current[][] = new int[CurrentY][CurrentX];
 	int time_lapse; // Speed variable
 
-	public Game() {	
+	public Game() 
+	{	
 		currCounter = new Counter();
 		for (int i = 0; i < CurrentY; i++) {
 			for (int j = 0; j < CurrentX; j++) {
@@ -116,15 +117,15 @@ public class Game implements BL_Interface {
 		
 	}
 	@Override
-	public void Draw() {
-		
+	public void Draw(int x, int y) {//set these cordinate box as alive
+		grid[x][y].SetAlive();
 	}
 	//-------------------------add flag for Interrupt
 	@Override
-	public void Play()
+	public void Play(boolean flag)
 	{
 		int ALive_Counter = 0;
-		while (true)
+		while (flag)
 		{
 			for (int i = 1; i < CurrentY-1; i++)
 			{
@@ -224,6 +225,27 @@ public class Game implements BL_Interface {
 		}
 	}
 
+	@Override
+	public int[][] BoxToInt()
+	{
+		int grid_int[][] = new int[CurrentY][CurrentX];
+		for (int i = 0; i < CurrentY; i++)
+		{
+			for (int j = 0; j < CurrentX; j++)
+			{
+				if (grid[i][j].GetState() == true)
+				{
+					grid_int[i][j] = 1;
+				}
+				else
+				{
+					grid_int[i][j] = 0;
+				}
+			}
+		}
+		return grid_int;
+	}
+	
 	@Override
 	public void Print(Box box) 
 	{

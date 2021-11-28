@@ -1,4 +1,5 @@
-package elements;
+package UI;
+import Elements.*;
 
 import java.util.*;
 import java.lang.Thread;
