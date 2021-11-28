@@ -6,9 +6,8 @@ public interface BL_Interface {
 	public void Next();
 	
 	
-	public void ChangeSpeed(int i ) ;
+	public void ChangeSpeed(int i) ;
 	public void Reset(); 
-	public void Counter(); 
 	public void ViewSavedStates();
 	public void DeleteStates();
 	public void Draw();
