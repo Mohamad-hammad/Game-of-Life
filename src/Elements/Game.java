@@ -1,7 +1,5 @@
 package Elements;
-
 public class Game implements BL_Interface {
-	Counter currCounter;
 	int CurrentX =20;
 	int CurrentY =20;
 	boolean flag = true;
@@ -9,8 +7,7 @@ public class Game implements BL_Interface {
 	int current[][] = new int[CurrentY][CurrentX];
 	int time_lapse; // Speed variable
 
-	public Game() {	
-		currCounter = new Counter();
+	public Game() {
 		for (int i = 0; i < CurrentY; i++) {
 			for (int j = 0; j < CurrentX; j++) {
 				grid[i][j] = new Box(i, j);
@@ -33,7 +30,6 @@ public class Game implements BL_Interface {
 		//System.out.println("Alive: " + CountAlive(GetNeighbors(grid[150][150])));
 	}
 
-	@Override
 	public void SetInitStates() {
 		grid[15][14].SetAlive();
 		grid[15][15].SetAlive();
@@ -42,9 +38,8 @@ public class Game implements BL_Interface {
 		//grid[151][151].SetAlive();
 	}
 
-	@Override
 	public void Next()
-	{	
+	{
 		System.out.println("Next() Called: \n");
 		try
 		{
@@ -83,9 +78,8 @@ public class Game implements BL_Interface {
 
 			flag = false;
 		}
-		currCounter.IncCounter();
+
 	}
-	@Override
 	public void ChangeSpeed(int i ) {
 		if ((i>0)&&(time_lapse<2000)) {
 			time_lapse += 100;
@@ -94,33 +88,22 @@ public class Game implements BL_Interface {
 			time_lapse -= 100;
 		}
 	}
-	@Override
 	public void Reset() {
-		currCounter.ResetCounter();
-		time_lapse=1000;
-		for (int i = 0; i < CurrentY; i++) {
-			for (int j = 0; j < CurrentX; j++) {
-				grid[i][j] = new Box(i, j);
-			}
-		}
-		System.out.println("Reset() Called;");
-			
-	}
 	
-	@Override
+	}
+	public void Counter() {
+		
+	}
 	public void ViewSavedStates() {
 		
 	}
-	@Override
 	public void DeleteStates() {
 		
 	}
-	@Override
 	public void Draw() {
 		
 	}
 	//-------------------------add flag for Interrupt
-	@Override
 	public void Play()
 	{
 		int ALive_Counter = 0;
@@ -153,12 +136,10 @@ public class Game implements BL_Interface {
 				// this part is executed when an exception (in this example InterruptedException) occurs
 				System.out.println("Error in sleep \n");
 			}
-			currCounter.IncCounter();
 		}
 
 	}
 
-	@Override
 	public int[][] GetNeighbors(Box box)
 	{
 		int[][] neighbors = new int[8][2];
@@ -190,7 +171,6 @@ public class Game implements BL_Interface {
 
 	}
 
-	@Override
 	public int CountAlive(int[][] neighbors)
 	{
 		int count = 0;
@@ -210,7 +190,6 @@ public class Game implements BL_Interface {
 		return count;
 	}
 
-	@Override
 	public void PrintAlive() 
 	{
 		for (int i = 0; i < CurrentY; i++) {
@@ -224,7 +203,6 @@ public class Game implements BL_Interface {
 		}
 	}
 
-	@Override
 	public void Print(Box box) 
 	{
 		System.out.println();
