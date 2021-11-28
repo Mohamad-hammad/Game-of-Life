@@ -1,5 +1,5 @@
 package Elements;
-public class Game {
+public class Game implements BL_Interface {
 	int CurrentX =20;
 	int CurrentY =20;
 	boolean flag = true;
