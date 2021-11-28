@@ -30,7 +30,7 @@ public class Game implements BL_Interface {
 		//System.out.println("Alive: " + CountAlive(GetNeighbors(grid[150][150])));
 	}
 
-	void SetInitStates() {
+	public void SetInitStates() {
 		grid[15][14].SetAlive();
 		grid[15][15].SetAlive();
 
@@ -104,7 +104,7 @@ public class Game implements BL_Interface {
 		
 	}
 	//-------------------------add flag for Interrupt
-	void Play()
+	public void Play()
 	{
 		int ALive_Counter = 0;
 		while (true)
@@ -140,7 +140,7 @@ public class Game implements BL_Interface {
 
 	}
 
-	int[][] GetNeighbors(Box box)
+	public int[][] GetNeighbors(Box box)
 	{
 		int[][] neighbors = new int[8][2];
 		neighbors[0][0] = box.GetX()-1;
@@ -171,7 +171,7 @@ public class Game implements BL_Interface {
 
 	}
 
-	int CountAlive(int[][] neighbors)
+	public int CountAlive(int[][] neighbors)
 	{
 		int count = 0;
 		int a,b;
@@ -203,10 +203,10 @@ public class Game implements BL_Interface {
 		}
 	}
 
-	void Print(Box box) 
+	public void Print(Box box) 
 	{
 		System.out.println();
-		System.out.println("X: " + box.GetX());
-		System.out.println("X: " + box.GetY());
+		System.out.print("X: " + box.GetX());
+		System.out.print("X: " + box.GetY());
 	}
 }
