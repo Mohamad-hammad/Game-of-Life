@@ -9,11 +9,148 @@ import java.io.File;
 import java.util.LinkedList;
 import java.sql.*;
 
-
 public class ReadFromText implements DBInterface {
+
+    public boolean CheckFileEmpty(String FilePath){
+
+        try {
+
+            File myObj = new File(FilePath);
+            Scanner myReader = new Scanner(myObj);
+
+            String data1 = "";
+
+            // For input of Save_State
+
+            if (myReader.hasNextLine()) {
+                myReader.close();
+                return false;
+            } else {
+                myReader.close(); 
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        
+        return true;
+
+        // For input of Save_State
+
+    }
+
+    public int getCurrentSaveID(String FilePath) {
+
+        int Saveid = 0;
+
+        try {
+
+            File myObj = new File(FilePath);
+            Scanner myReader = new Scanner(myObj);
+
+            String data1 = "";
+
+            // For input of Save_State
+
+            if (CheckFileEmpty(FilePath)==false) {
+            } else {
+                myReader.close();
+                return -1;
+            }
+            myReader.nextLine();
+            myReader.nextLine();
+            data1 = myReader.nextLine();
+            data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+
+            Saveid = Integer.parseInt(new String(data1));
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        return Saveid;
+    }
+
+    public int[] viewSaveId(String FilePath) throws SQLException {
+        int arr[] = new int[100];
+        int j = 0;
+        int boxRow;
+
+       
+        try {
+
+            File myObj = new File(FilePath);
+            Scanner myReader = new Scanner(myObj);
+
+            String data1 = "";
+
+            if (CheckFileEmpty(FilePath)==false) {
+            } else {
+                myReader.close();
+                arr[0]=-1;
+                return arr;
+            }
+    
+
+            // For input of Save_State
+
+            myReader.nextLine();
+            myReader.nextLine();
+            data1 = myReader.nextLine();
+            data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+
+            arr[j++] = Integer.parseInt(new String(data1));
+
+            boolean breaker = false;
+
+            for (; breaker != true;) {
+
+                if (j >= getCurrentSaveID(FilePath)) {
+                    breaker = true;
+                } else {
+
+                    data1 = myReader.nextLine();
+                    data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+                    boxRow = Integer.parseInt(new String(data1.substring(0, data1.indexOf('x'))));
+
+                    myReader.nextLine();
+                    myReader.nextLine();
+
+                    for (int i = 0; i < boxRow; i++, myReader.nextLine())
+                        ;
+
+                    myReader.nextLine();
+                    myReader.nextLine();
+
+                    myReader.nextLine();
+
+                    myReader.nextLine();
+
+                    myReader.nextLine();
+
+                    myReader.nextLine();
+
+                    data1 = myReader.nextLine();
+                    data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
+                    arr[j++] = Integer.parseInt(new String(data1));
+
+                }
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        return arr;
+    }
 
     public void Save(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[], String FilePath)
             throws SQLException { // interface method (does not have a body)
+
+        save_id = getCurrentSaveID(FilePath) + 1;
 
         Queue<String> q = new LinkedList<>();
 
@@ -95,6 +232,15 @@ public class ReadFromText implements DBInterface {
 
             // For input of Save_State
 
+            if(CheckFileEmpty(FilePath)==true){
+                Box_Row[0]=0;
+                Box_Column[0]=0;
+                Counter[0]=0;
+                myReader.close();
+                return;
+            }
+            else{}
+
             myReader.nextLine();
             myReader.nextLine();
             data1 = myReader.nextLine();
@@ -109,18 +255,33 @@ public class ReadFromText implements DBInterface {
 
                 if (save_id1 == save_id) {
                     breaker = true;
-                } else {
+                } 
+                else if(myReader.hasNextLine()==false){
+                    Box_Row[0]=0;
+                    Box_Column[0]=0;
+                    Counter[0]=0;
+                    myReader.close();
+                    return;
+                }
+                
+                else {
 
                     data1 = myReader.nextLine();
                     data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
                     Box_Row[0] = Integer.parseInt(new String(data1.substring(0, data1.indexOf('x'))));
 
-                    myReader.nextLine();myReader.nextLine();
-                    
-                    for(int i=0;i<Box_Row[0];i++,myReader.nextLine());
-                    
-                    myReader.nextLine();myReader.nextLine(); myReader.nextLine();
-                    myReader.nextLine();myReader.nextLine(); myReader.nextLine();
+                    myReader.nextLine();
+                    myReader.nextLine();
+
+                    for (int i = 0; i < Box_Row[0]; i++, myReader.nextLine())
+                        ;
+
+                    myReader.nextLine();
+                    myReader.nextLine();
+                    myReader.nextLine();
+                    myReader.nextLine();
+                    myReader.nextLine();
+                    myReader.nextLine();
 
                     data1 = myReader.nextLine();
                     data1 = data1.substring(data1.indexOf(':') + 2, data1.length());
@@ -154,7 +315,7 @@ public class ReadFromText implements DBInterface {
             // Here, Initialize the Box-2d by loading Box_Row and Box_Column from File.
             // this will create an Array with respect to file Box_Row and Box_Column
 
-        //    Box = new int[Box_Row[0]][Box_Column[0]];
+            // Box = new int[Box_Row[0]][Box_Column[0]];
 
             // ---
 
@@ -187,36 +348,15 @@ public class ReadFromText implements DBInterface {
 
         ReadFromText R_Obj = new ReadFromText();
 
-        // -------------------------------
-
         // Suppose we want to save it in file:
 
         int[] box_Row = new int[] { 3 };
         int[] box_Column = new int[] { 6 };
-        int[] save_id = new int[] { 15 };
+        int[] save_id = new int[] { 80 };
         int[] Counter = new int[] { 100 };
 
         int[][] BOX = new int[box_Row[0]][box_Column[0]];
 
-        R_Obj.Load(box_Row, box_Column, BOX, save_id[0], Counter, FilePath);
-        
-        // To test wheather it wheather it is load correctly.
-
-        System.out.println("--------------------------\n");
-        System.out.println("Saveid      :" + save_id[0]);
-        System.out.println("Counter      :" + Counter[0]);
-
-        for (int i = 0; i < box_Row[0]; i++) {
-            for (int j = 0; j < box_Column[0]; j++) {
-                System.out.print(BOX[i][j] + " ");
-            }
-
-            System.out.println();
-        }
-
-
-
-        
         BOX[0][0] = 0;
         BOX[0][1] = 0;
         BOX[0][2] = 1;
@@ -236,22 +376,43 @@ public class ReadFromText implements DBInterface {
         BOX[2][4] = 0;
         BOX[2][5] = 0;
 
+        for (int i = 0; i < 5; i++) {
+            R_Obj.Save(box_Row, box_Column, BOX, 0, Counter, FilePath);
+        }
 
+        int arr[] = R_Obj.viewSaveId(FilePath);
+        System.out.println(arr[0]);
+        for (int i = 0; i < R_Obj.getCurrentSaveID(FilePath); i++) {
+            System.out.println(arr[i]);
+        }
 
-      //  R_Obj.Save(box_Row, box_Column, BOX, save_id[0], Counter, FilePath);
+        // -------------------------------
+
+             R_Obj.Load(box_Row, box_Column, BOX, 4, Counter, FilePath);
+             for (int i = 0; i < box_Row[0]; i++) 
+           { 
+              for (int j = 0; j < box_Column[0];j++) {
+                      System.out.print(BOX[i][j] + " "); 
+           }
+           }
+
+        // To test wheather it wheather it is load correctly.
+        /*
+         * System.out.println("--------------------------\n");
+         * System.out.println("Saveid      :" + save_id[0]);
+         * System.out.println("Counter      :" + Counter[0]);
+         * 
+         *
+         * 
+         * System.out.println(); }
+         * 
+         */
 
         // ----------------------------------------------
-
-
-
-
-
-        
 
         // One thing is that .. their is difficulty to pass by reference in java. Load
         // function
         // works but the when you pass an array with new keyword.
-        */
+
     }
 
-}

@@ -4,24 +4,31 @@ import java.io.*;
 public class board {
     public int height,width;
     public String[][] box ;
+    int nextstate[][];
     public board()
     {
 
     }
-    public board(int h,int w)
+    public board(int h,int w,int current[][])
     {
         height=h;
         width=w;
+        //CurrentX =w;
+        //CurrentY =h;
        box = new String[height][width];
         for (int i = 0; i < box.length; i++)
-            for (int j = 0; j < box[i].length; j++)
+            for (int j = 0; j < box[i].length; j++) {
                 box[i][j] = " - ";
+                current[i][j]= 0;
+            }
     }
-    public void resetBoard()
+    public void resetBoard(int current[][])
     {
         for (int i = 0; i < box.length; i++)
-            for (int j = 0; j < box[i].length; j++)
+            for (int j = 0; j < box[i].length; j++) {
                 box[i][j] = " - ";
+               current[i][j] = 0;
+            }
     }
     public  void printBoard() {
         System.out.print("    |");
@@ -57,9 +64,61 @@ public class board {
             System.out.println();
         }
     }
-    public void setAlive(int x, int y)
+    public void setAlive(int x, int y,int current[][])
     {
         box[x-1][y-1]=" * ";
+        current[x-1][y-1]=1;
+    }
+    public void viewState(int current[][])
+    {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if(current[i][j]==0){
+                    System.out.print("-");
+                }
+                if(current[i][j]==1)
+                {
+                    System.out.print("*");
+                }
+            }
+            System.out.println();
+        }
+    }
+    private int decide(int i, int j,int current[][]){
+        int neighbors = 0;
+        if(j > 0){
+            if(current[i][j-1]==1) neighbors++;
+            if(i>0) if(current[i-1][j-1]==1) neighbors++;
+            if(i<height-1) if(current[i+1][j-1]==1) neighbors++;
+        }
+        if(j < width-1){
+            if(current[i][j+1]==1) neighbors++;
+            if(i>0) if(current[i-1][j+1]==1) neighbors++;
+            if(i<height-1) if(current[i+1][j+1]==1) neighbors++;
+        }
+        if(i>0) if(current[i-1][j]==1) neighbors++;
+        if(i<height-1) if(current[i+1][j]==1) neighbors++;
+        if(neighbors == 3) return 1;
+        if(current[i][j]==1 && neighbors == 2) return 1;
+        return 0;
+    }
+    public void nextState(int current[][])
+    {
+        nextstate=new int[height][width];
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                nextstate[i][j] = decide(i,j,current);
+            }
+        }
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                current[i][j] = nextstate[i][j];
+                if(current[i][j]==1)
+                {
+                    box[i][j]="*";
+                }
+            }
+        }
     }
     public final static void clearConsole()
     {
