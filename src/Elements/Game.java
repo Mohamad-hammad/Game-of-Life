@@ -9,7 +9,8 @@ public class Game implements BL_Interface {
 	int current[][] = new int[CurrentY][CurrentX];
 	int time_lapse; // Speed variable
 
-	public Game() {	
+	public Game() 
+	{	
 		currCounter = new Counter();
 		for (int i = 0; i < CurrentY; i++) {
 			for (int j = 0; j < CurrentX; j++) {
