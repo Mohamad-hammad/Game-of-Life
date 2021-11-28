@@ -1,5 +1,7 @@
 package UI;
+
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 import java.util.TimerTask;
 
 import javax.swing.SwingUtilities;
@@ -10,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import Elements.BL_Interface;
+
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.BorderFactory;
@@ -19,12 +24,13 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
     public class UserInterface    {
-
+    private BL_Interface  BL=new Elements.Game();
     //Remvoe this ---------------------
         
     boolean play;
     //Remove this -------------------------
     //buttons and jpanel
+    
     private Button Start_Button;
     private Button Reset_Button;
     private Button Next_Button;
@@ -67,6 +73,12 @@ import java.awt.*;
             public void run(){
            
                     Playthegame();
+                    try {
+                        Thread.sleep(speed_slider.getValue()*50);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
             }
         };
         time.scheduleAtFixedRate(task, 0, 100);
