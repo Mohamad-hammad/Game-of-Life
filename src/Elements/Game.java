@@ -226,6 +226,27 @@ public class Game implements BL_Interface {
 	}
 
 	@Override
+	public int[][] BoxToInt()
+	{
+		int grid_int[][] = new int[CurrentY][CurrentX];
+		for (int i = 0; i < CurrentY; i++)
+		{
+			for (int j = 0; j < CurrentX; j++)
+			{
+				if (grid[i][j].GetState() == true)
+				{
+					grid_int[i][j] = 1;
+				}
+				else
+				{
+					grid_int[i][j] = 0;
+				}
+			}
+		}
+		return grid_int;
+	}
+	
+	@Override
 	public void Print(Box box) 
 	{
 		System.out.println();
