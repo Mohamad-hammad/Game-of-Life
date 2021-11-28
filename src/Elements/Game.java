@@ -117,8 +117,8 @@ public class Game implements BL_Interface {
 		
 	}
 	@Override
-	public void Draw() {
-		
+	public void Draw(int x, int y) {//set these cordinate box as alive
+		grid[x][y].SetAlive();
 	}
 	//-------------------------add flag for Interrupt
 	@Override
