@@ -5,8 +5,9 @@ public class Main {
 
     public static void main(String[] args) 
     {
-    	Game game = new Game();
-
+    	BL_Interface g1 = new Game();
+ 		g1.PrintAlive();
+ 		g1.Next();
     }
 }
 
