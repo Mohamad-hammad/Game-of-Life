@@ -12,7 +12,7 @@ public interface BL_Interface {
 	public void DeleteStates();
 	public void Draw();
 	//-------------------------add flag for Interrupt
-	void Play();
+	void Play(boolean flag);
 	
 	int[][] GetNeighbors(Box box);
 	

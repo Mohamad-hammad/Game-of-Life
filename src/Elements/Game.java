@@ -122,10 +122,10 @@ public class Game implements BL_Interface {
 	}
 	//-------------------------add flag for Interrupt
 	@Override
-	public void Play()
+	public void Play(boolean flag)
 	{
 		int ALive_Counter = 0;
-		while (true)
+		while (flag)
 		{
 			for (int i = 1; i < CurrentY-1; i++)
 			{
