@@ -52,7 +52,7 @@ import java.awt.*;
         //create and draw grid
         grid = new Grid();        
         counter.setText(String.valueOf(generations));
-       
+       //play function
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     
     }

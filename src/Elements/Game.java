@@ -80,7 +80,30 @@ public class Game {
 		}
 
 	}
-
+	public void ChangeSpeed(int i ) {
+		if ((i>0)&&(time_lapse<2000)) {
+			time_lapse += 100;
+		}
+		else if((i<0)&&(time_lapse>200)) {
+			time_lapse -= 100;
+		}
+	}
+	public void Reset() {
+	
+	}
+	public void Counter() {
+		
+	}
+	public void ViewSavedStates() {
+		
+	}
+	public void DeleteStates() {
+		
+	}
+	public void Draw() {
+		
+	}
+	//-------------------------add flag for Interrupt
 	void Play()
 	{
 		int ALive_Counter = 0;
