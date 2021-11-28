@@ -20,7 +20,10 @@ import java.awt.*;
 
     public class UserInterface    {
 
-    
+    //Remvoe this ---------------------
+        
+    boolean play;
+    //Remove this -------------------------
     //buttons and jpanel
     private Button Start_Button;
     private Button Reset_Button;
@@ -29,6 +32,9 @@ import java.awt.*;
     private Button SaveStates_Button;
     private Button ZoomIn;
     private Button ZoomOut;
+    private int zoom_scale=1;
+    private final int w=400;
+    private final int h=300;
     private javax.swing.JPanel Panel;
     private ViewStates SavedStates;
     private JLabel counter;
@@ -55,7 +61,17 @@ import java.awt.*;
         //create and draw grid
         grid = new Grid();        
         counter.setText(String.valueOf(generations));
-       //play function
+        //Revmoe this --------------------------------------
+        Timer time = new Timer();
+        TimerTask task = new TimerTask(){
+            public void run(){
+           
+                    Playthegame();
+            }
+        };
+        time.scheduleAtFixedRate(task, 0, 100);
+        
+        //Remove this------------------------------------------
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     
     }
@@ -64,7 +80,67 @@ import java.awt.*;
         return frame;
     }
     
+    //Remvoe this--------------------------------------------------
+  
+    private int decide(int i, int j){
+        int neighbors = 0;
+       
+        if(j > 0){
+            if(Current_State[i][j-1]==1) neighbors++;
+            if(i>0) if(Current_State[i-1][j-1]==1) neighbors++;
+            if(i<height-1) if(Current_State[i+1][j-1]==1) neighbors++;
+        }
+        if(j < width-1){
+            if(Current_State[i][j+1]==1) neighbors++;
+            if(i>0) if(Current_State[i-1][j+1]==1) neighbors++;
+            if(i<height-1) if(Current_State[i+1][j+1]==1) neighbors++;
+        }
+        if(i>0) if(Current_State[i-1][j]==1) neighbors++;
+        if(i<height-1) if(Current_State[i+1][j]==1) neighbors++;
+        if(neighbors == 3) return 1;
+        if(Current_State[i][j]==1 && neighbors == 2) return 1;
+        return 0;
+    }
     
+    void PlayNext()
+    {
+         generations++;
+         counter.setText(String.valueOf(generations));
+          for(int i = 0; i < height; i++){
+              for(int j = 0; j < width; j++){
+                Next_State[i][j] = decide(i,j);
+              }
+          }
+          for(int i = 0; i < height; i++){
+              for(int j = 0; j < width; j++){
+                Current_State[i][j] = Next_State[i][j];
+              }
+          }
+          grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+    }
+    void Playthegame()
+    {
+         Is_Playing = play;
+         
+        if(play){
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    Next_State[i][j] = decide(i,j);
+                }
+            }
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    Current_State[i][j] = Next_State[i][j];
+                }
+            }
+            generations++;
+            counter.setText(String.valueOf(generations));
+            templabel.setText(String.valueOf(speed_slider.getValue()));
+            grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+        }
+    }
+    
+    //Remove this ----------------------------------------------
  
     @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -241,19 +317,19 @@ import java.awt.*;
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        //Is_Playing=play;
+        Is_Playing=play;
         Is_Playing = !Is_Playing;
         if(Is_Playing) Start_Button.Get_Button().setText("Pause");
         else Start_Button.Get_Button().setText("Play");
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-       // play=Is_Playing;
+        play=Is_Playing;
     }
     private void NextButtonActionPerformed(java.awt.event.ActionEvent evt)
     {
-        //Is_Playing=play;
+        Is_Playing=play;
         if(!Is_Playing)
         {
-           // PlayNext();
+            PlayNext();
         }
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -271,11 +347,38 @@ import java.awt.*;
     }
     private void ZoomInClicked(java.awt.event.ActionEvent evt)
     {
+        if(zoom_scale<10)
+        {
+            zoom_scale++;
+            if(width - (zoom_scale*20)>20 && height - (zoom_scale*20)>20 )
+            {
+                width=width - (zoom_scale*20);
+                height=height - (zoom_scale*20);
+                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+            }
+        }
         
+
     }
     private void ZoomOutClicked(java.awt.event.ActionEvent evt)
     {
-        
+
+        if(zoom_scale>=1)
+        {
+            zoom_scale--;
+            if(width + (zoom_scale*20)<400 && height + (zoom_scale*20)<300 )
+            {
+                width=width + (zoom_scale*20);
+                height=height + (zoom_scale*20);
+                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+            }
+            else
+            {
+                width=400;
+                height=300;
+                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+            }
+        }
     }
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {
         int j = width * evt.getX() / Panel.getWidth();
