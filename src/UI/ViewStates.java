@@ -2,37 +2,118 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.GroupLayout.Alignment;
-public class ViewStates {
-	private JFrame frame;
-	
-	ViewStates()
+
+import Elements.BL_Interface;
+import Elements.Game;
+public class ViewStates extends JFrame{
+	private JButton RemoveButton;
+	private JButton LoadButton;
+	private JTextField input;
+	private int[] statesid;
+	private BL_Interface  BL;
+	ViewStates(BL_Interface obj)
 	{
-		frame = new JFrame("Saved States");
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		super("View States");
+		BL=obj;
+		setBounds(100,100,450,300);
+		Container ControlHost= getContentPane();
+		ControlHost.setLayout(new BorderLayout());
 		
-		JScrollBar scrollBar = new JScrollBar();
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(417, Short.MAX_VALUE)
-					.addComponent(scrollBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollBar, GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
-		);
-		frame.getContentPane().setLayout(groupLayout);
+		
+		JPanel panel = new JPanel();
+		GridLayout gl = new GridLayout(0,3,1,1);
+		panel.setLayout(gl);
+		//panel.setMinimumSize(new Dimension(500, 500));
+	
+		JLabel [] label;
+//		JButton [] LoadState;
+//		JButton [] RemoveState;
+		label=new JLabel[500];
+//		LoadState=new JButton[500];
+//		RemoveState=new JButton[500];
+		JLabel heading,heading1,heading2;
+		heading1 = new JLabel("			");
+		heading1.setFont(new Font("Serif", Font.PLAIN, 40));
+		heading1.setHorizontalAlignment(SwingConstants.CENTER);
+		heading1.setVerticalAlignment(SwingConstants.CENTER);
+		
+		heading = new JLabel("LIST OF STATES");
+		heading.setFont(new Font("Serif", Font.PLAIN, 40));
+		heading.setHorizontalAlignment(SwingConstants.CENTER);
+		heading.setVerticalAlignment(SwingConstants.CENTER);
+		
+		heading2 = new JLabel("			");
+		heading2.setFont(new Font("Serif", Font.PLAIN, 40));
+		heading2.setHorizontalAlignment(SwingConstants.CENTER);
+		heading2.setVerticalAlignment(SwingConstants.CENTER);
+		
+		input = new JTextField("enter the state id", 20);
+		LoadButton=new JButton("Load State");
+		
+		RemoveButton=new JButton("Remove State");
+		panel.add(heading1);
+		panel.add(heading);
+		panel.add(heading2);
+		panel.add(input);
+		panel.add(LoadButton);
+		panel.add(RemoveButton);
+		statesid=BL.ViewSavedStates();
+		for(int i=0;i<statesid.length;i++)
+		{
+			 label[i] = new JLabel("State #"+statesid[i]);
+			 label[i].setPreferredSize(new Dimension(300, 25));
+			 label[i].setHorizontalAlignment(SwingConstants.CENTER);
+			 label[i].setVerticalAlignment(SwingConstants.CENTER);
+//			 LoadState[i]=new JButton("Load State");
+//			 RemoveState[i]=new JButton("Remove State");
+			 panel.add(label[i]);
+//			 panel.add(LoadState[i]);
+//			 panel.add(RemoveState[i]);
+			 
+		}
+//		JLabel jlabel = new JLabel("This is a label");
+//		jlabel.setPreferredSize(new Dimension(300, 25));
+//		panel.add(jlabel);
+//		panel.add(new JButton("HI "+ 1));
+//		panel.add(new JButton("HI "+ 2));
+		
+		JScrollPane jsp=new JScrollPane(
+				panel,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		ControlHost.add(jsp);
+	
 		  //frame.getContentPane().add(BorderLayout.CENTER, panel);
-          frame.pack();
-          frame.setLocationByPlatform(true);
-          frame.setVisible(false);
-          frame.setResizable(true);
+          this.pack();
+          this.setLocationByPlatform(true);
+          this.setVisible(false);
+          this.setResizable(true);
+          
+          RemoveButton.addActionListener(new java.awt.event.ActionListener() {
+              public void actionPerformed(java.awt.event.ActionEvent evt) {
+                  RemoveState(evt);
+              }
+          });
+          
+          LoadButton.addActionListener(new java.awt.event.ActionListener() {
+              public void actionPerformed(java.awt.event.ActionEvent evt) {
+                  LoadState(evt);
+              }
+          });
+	}
+
+	private void RemoveState(java.awt.event.ActionEvent evt) {
+		System.out.print("removing " + input.getText());
+		BL.DeleteStates( Integer.parseInt(input.getText()));
+		this.dispose();
+	}
+	private void LoadState(java.awt.event.ActionEvent evt) {
+		System.out.print("loading " + input.getText());
+		BL.LoadSaveStates(Integer.parseInt(input.getText()));
+		this.dispose();
 	}
 	public JFrame GetFrame()
 	{
-		return frame;
+		return this;
 	}
 }
