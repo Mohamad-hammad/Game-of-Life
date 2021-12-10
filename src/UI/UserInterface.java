@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Elements.BL_Interface;
+import Elements.Game;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -24,13 +25,12 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 
     public class UserInterface    {
-    private BL_Interface  BL=new Elements.Game();
-    //Remvoe this ---------------------
-        
+    private BL_Interface  BL;
+
+    //flag to keep a check on whether user has clicked the play button or not    
     boolean play;
-    //Remove this -------------------------
+
     //buttons and jpanel
-    
     private Button Start_Button;
     private Button Reset_Button;
     private Button Next_Button;
@@ -39,8 +39,8 @@ import java.awt.*;
     private Button ZoomIn;
     private Button ZoomOut;
     private int zoom_scale=1;
-    private final int w=400;
-    private final int h=300;
+    private final int w=300;
+    private final int h=200;
     private javax.swing.JPanel Panel;
     private ViewStates SavedStates;
     private JLabel counter;
@@ -49,9 +49,11 @@ import java.awt.*;
     private Image offScrImg;
     private JSlider speed_slider;
     private Graphics offScrGraph;
+    //generation counter
     int countervalue=10;
-    int width = 400;
-    int height = 300;
+    //height and width of the grid
+    int width = 302;
+    int height = 202;
     private JFrame frame;
     //arrays to store current and next state/generation
     int[][] Current_State = new int[height][width];
@@ -59,8 +61,10 @@ import java.awt.*;
     //variable to check if play button is clicked or not
     boolean Is_Playing;
     Grid grid;
-    double generations=60;
-    public UserInterface() {
+    double generations=0;
+    public UserInterface(Game obj) {
+    	//GUIorConsole();
+    	BL=obj;
         initComponents();
         offScrImg = frame.createImage(Panel.getWidth(), Panel.getHeight());
         offScrGraph = offScrImg.getGraphics();
@@ -72,9 +76,13 @@ import java.awt.*;
         TimerTask task = new TimerTask(){
             public void run(){
            
-                    Playthegame();
+                    //Playthegame();
+            	    BL.Play(play,Current_State);
+            	    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+            	    counter.setText(String.valueOf(BL.get_Counter()));
                     try {
                         Thread.sleep(speed_slider.getValue()*50);
+                        
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -84,7 +92,7 @@ import java.awt.*;
         time.scheduleAtFixedRate(task, 0, 100);
         
         //Remove this------------------------------------------
-        grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+       // grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     
     }
     public JFrame getframe()
@@ -113,7 +121,6 @@ import java.awt.*;
         if(Current_State[i][j]==1 && neighbors == 2) return 1;
         return 0;
     }
-    
     void PlayNext()
     {
          generations++;
@@ -153,7 +160,7 @@ import java.awt.*;
     }
     
     //Remove this ----------------------------------------------
- 
+  
     @SuppressWarnings("unchecked")
     private void initComponents() {
         //initialize panel and buttons
@@ -186,6 +193,7 @@ import java.awt.*;
         speed_slider.setMinorTickSpacing(1);
         frame.getContentPane().setBackground( Color.decode("#3b444b") ); 
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        frame.setExtendedState(frame.MAXIMIZED_BOTH);
        // this.getContentPane().setBackground(Color.PINK);
         Panel.setBackground(new java.awt.Color(102, 102, 102));
         //set mouse actions
@@ -255,6 +263,11 @@ import java.awt.*;
                 ZoomOutClicked(evt);
             }
         });
+        SaveStates_Button.Get_Button().addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveCurrentState(evt);
+            }
+        });
         //set layout
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(frame.getContentPane());
         frame.getContentPane().setLayout(layout);
@@ -313,26 +326,37 @@ import java.awt.*;
 
         frame.pack();
     }
-  
-    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) 
+    {
           int j = width * evt.getX() / Panel.getWidth();
           int i = height * evt.getY() / Panel.getHeight();
-          if(SwingUtilities.isLeftMouseButton(evt)){
+          if(SwingUtilities.isLeftMouseButton(evt))
+          {
               Current_State[i][j] = 1;
-          }else Current_State[i][j] = 0;
+              BL.Set_Cell_Alive(i, j);
+          }
+          else 
+    	  {
+    	  	Current_State[i][j] = 0;
+    	  	BL.Set_Cell_Dead(i, j);
+    	  }
           grid.DrawGrid(Panel,offScrImg, offScrGraph,  width, height, Current_State);
     }
-
     private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {
         
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     }
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         Is_Playing=play;
         Is_Playing = !Is_Playing;
-        if(Is_Playing) Start_Button.Get_Button().setText("Pause");
-        else Start_Button.Get_Button().setText("Play");
+        if(Is_Playing) 
+    	{
+        	Start_Button.Get_Button().setText("Pause");
+    	}
+        else 
+        {
+        	Start_Button.Get_Button().setText("Play");
+        }
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         play=Is_Playing;
     }
@@ -341,20 +365,28 @@ import java.awt.*;
         Is_Playing=play;
         if(!Is_Playing)
         {
-            PlayNext();
+            //PlayNext();
+        	BL.Next(Current_State);
+     	    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         }
     }
+    private void SaveCurrentState(java.awt.event.ActionEvent evt) {
+    	BL.SaveState();
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        Current_State = new int[height][width];
-        
+        //Current_State = new int[height][width];
+        BL.Reset_States(Current_State);
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-        generations=0;
-        counter.setText(String.valueOf(generations));
+        //generations=0;
+        //counter.setText(String.valueOf(generations));
+        BL.Reset_Counter();
+        counter.setText(String.valueOf(BL.get_Counter()));
+    
     }
     private void ViewStatesActionPerformed(java.awt.event.ActionEvent evt)
     {
         
-            SavedStates=new ViewStates();
+            SavedStates=new ViewStates(BL);
             SavedStates.GetFrame().setVisible(true);
     }
     private void ZoomInClicked(java.awt.event.ActionEvent evt)
@@ -396,36 +428,77 @@ import java.awt.*;
         int j = width * evt.getX() / Panel.getWidth();
         int i = height * evt.getY() / Panel.getHeight();
         if(SwingUtilities.isLeftMouseButton(evt)){
-            Current_State[i][j] = 1;
-        }else Current_State[i][j] = 0;
+    	{
+    		Current_State[i][j] = 1;
+    		BL.Set_Cell_Alive(i, j);
+    	}
+        }else
+        {
+        	Current_State[i][j] = 0;
+        	BL.Set_Cell_Dead(i, j);
+        }
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     }
-    
-    public static void main(String args[]) {
-      
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+    private void GUIorConsole()
+    {
+    	System.out.print("in gui or console");
+    	JFrame tempframe=new JFrame("GUI OR CONSOLE");
+    	tempframe.getContentPane().setBackground( Color.decode("#3b444b") ); 
+    	tempframe.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    	JButton GUI = new JButton("GUI");
+    	JButton Console = new JButton("Console");
+    	tempframe.add(GUI);
+    	tempframe.add(Console);
+    	tempframe.pack();
+    	tempframe.setLocationByPlatform(true);
+    	tempframe.setVisible(false);
+    	tempframe.setResizable(true);
+    	Console.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CallConsole(evt);
+                tempframe.setVisible(false); 
+                tempframe.dispose();
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-       
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserInterface().frame.setVisible(true);
+        });
+    	GUI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CallGUI(evt);
+                tempframe.setVisible(false);
+                tempframe.dispose();
             }
         });
     }
+    private void CallConsole(java.awt.event.ActionEvent evt) {
+    	System.out.print("call gui\n");
+    }
+    private void CallGUI(java.awt.event.ActionEvent evt) {
+    	System.out.print("call console\n");
 
+    }
+//    public static void main(String args[]) {
+//      
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//       
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//               // new UserInterface(UserInterface).frame.setVisible(true);
+//            }
+//        });
+//    }
 
 }
