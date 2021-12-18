@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fd37e03a-a53b-42af-a5b8-1f0dbea0f4f1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bin/Elements/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Elements/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Elements/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Elements/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/DB/ReadFromText.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/DB/ReadFromText.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DB/ReadFromText.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DB/ReadFromText.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/board.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

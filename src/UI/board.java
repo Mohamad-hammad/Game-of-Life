@@ -1,62 +1,63 @@
-package elements;
-import java.lang.Thread;
-import java.io.*;
+package UI;
+
 public class board {
-    public int height,width;
-    public String[][] box ;
-    int nextstate[][];
-    public board()
-    {
+    public int height, width;
+    public String[][] box;
+
+    public board() {
 
     }
-    public board(int h,int w,int current[][])
-    {
-        height=h;
-        width=w;
-        //CurrentX =w;
-        //CurrentY =h;
-       box = new String[height][width];
+
+    /*public board(int h, int w, int current[][]) {
+        height = h;
+        width = w;
+        box = new String[height][width];
         for (int i = 0; i < box.length; i++)
             for (int j = 0; j < box[i].length; j++) {
                 box[i][j] = " - ";
-                current[i][j]= 0;
             }
-    }
-    public void resetBoard(int current[][])
-    {
+    }*/
+    public void Draw(int w,int h,int arr[][]) {
+        height = h;
+        width = w;
+        box = new String[height][width];
         for (int i = 0; i < box.length; i++)
             for (int j = 0; j < box[i].length; j++) {
-                box[i][j] = " - ";
-               current[i][j] = 0;
+                if (arr[i][j] == 0) {
+                    box[i][j] = " - ";
+                }
+                if (arr[i][j] == 1) {
+                    box[i][j] = " * ";
+                }
             }
+        printBoard();
     }
-    public  void printBoard() {
+    public void printBoard() {
         System.out.print("    |");
-        for (int i = 0; i < box[0].length; i++){
+        for (int i = 0; i < box[0].length; i++) {
             System.out.print("    ");
-            System.out.print((char)('A' + i));
+            System.out.print(i);
             System.out.print("    |");
         }
         System.out.println();
-        for (int i = 0; i < box.length; i++){
+        for (int i = 0; i < box.length; i++) {
             System.out.print("----+");
-            for (int j = 0; j < box[0].length; j++){
+            for (int j = 0; j < box[0].length; j++) {
                 System.out.print("---------+");
             }
             System.out.println();
-            System.out.print("  " + (i + 1) + " |");
-            for (int j = 0; j < box[0].length; j++){
-                if (box[i][j].length() < 10){
+            System.out.print("  " + (i) + " |");
+            for (int j = 0; j < box[0].length; j++) {
+                if (box[i][j].length() < 10) {
                     int spaces = (9 - box[i][j].length()) / 2;
-                    for (int k = 0; k < spaces; k++){
+                    for (int k = 0; k < spaces; k++) {
                         System.out.print(" ");
                     }
                     System.out.print(box[i][j]);
-                    for (int k = 0; k < (9 - box[i][j].length()) - spaces; k++){
+                    for (int k = 0; k < (9 - box[i][j].length()) - spaces; k++) {
                         System.out.print(" ");
                     }
-                }
-                else{
+                } else {
                     System.out.print(box[i][j].substring(0, 9));
                 }
                 System.out.print("|");
@@ -64,27 +65,23 @@ public class board {
             System.out.println();
         }
     }
-    public void setAlive(int x, int y,int current[][])
+    public void setHeight(int h)
     {
-        box[x-1][y-1]=" * ";
-        current[x-1][y-1]=1;
+        this.height=h;
     }
-    public void viewState(int current[][])
+    public void setWidth(int w)
     {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if(current[i][j]==0){
-                    System.out.print("-");
-                }
-                if(current[i][j]==1)
-                {
-                    System.out.print("*");
-                }
-            }
-            System.out.println();
-        }
+        this.width=w;
     }
-    private int decide(int i, int j,int current[][]){
+    public void setAlive(int x, int y, int current[][]) {
+        box[x - 1][y - 1] = " * ";
+    }
+
+    public void viewState(int current[][]) {
+
+    }
+}
+    /*private int decide(int i, int j,int current[][]){
         int neighbors = 0;
         if(j > 0){
             if(current[i][j-1]==1) neighbors++;
@@ -119,24 +116,4 @@ public class board {
                 }
             }
         }
-    }
-    public final static void clearConsole()
-    {
-        try
-        {
-            final String os = System.getProperty("os.name");
-            if (os.contains("Windows"))
-            {
-                Runtime.getRuntime().exec("cls");
-            }
-            else
-            {
-                Runtime.getRuntime().exec("clear");
-            }
-        }
-        catch (final Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-}
+    }*/
