@@ -8,15 +8,16 @@ public class Box {
     public Box()
     {
         state = false;
-        System.out.println("Box Created");
+        //System.out.println("Box Created");
     }
     public Box(int x, int y)
     {
         state = false;
         XBox = x;
         YBox = y;
-        System.out.println("Box with" + x + "," + y +" Created");
+        //System.out.println("Box with" + x + "," + y +" Created");
     }
+    //Copy Constructor for Box
     public Box(Box box)
     {
     	this.state = box.state;
@@ -36,10 +37,12 @@ public class Box {
     {
         return YBox;
     }
+    //sets the box State to Alive
     public void SetAlive()
     {
         state = true;
     }
+    //sets the box State to Alive
     public void SetDead()
     {
         state = false;
@@ -50,6 +53,7 @@ public class Box {
 //            return true;
 //        else return false;
 //    }
+    //returns alive or dead
     public boolean GetState()
     {
         return state;

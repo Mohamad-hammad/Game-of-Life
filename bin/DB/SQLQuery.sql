@@ -1,6 +1,11 @@
+create database db6;
+use db6;
+
+SET SQL_SAFE_UPDATES = 0;
+SET GLOBAL log_bin_trust_function_creators = 1;
 
 CREATE TABLE Save_State(
-Save_id int PRIMARY KEY, 
+Save_id int PRIMARY KEY Not Null, 
 Counter int, 
 Box_row INT,
 Box_Column INT
@@ -11,93 +16,41 @@ Box_num int,
 Box_id int,
 Status varchar(5),
 Save_id int,
+Box_ithPosition int,
+Box_jthPosition int,
 PRIMARY KEY(Box_num,Save_id)
 );
 
-CREATE PROCEDURE getindb_Box
-@mystring varchar(18)
-AS
-BEGIN
-DECLARE @i int
-SELECT @i = LEN(@mystring)
-DECLARE @j int = 0
-DECLARE @lastsave int
-if(EXISTS (Select * from Box))
-BEGIN
-SELECT @lastsave = Save_id FROM Box Where Save_id=(SELECT max(Save_id) FROM Box)
-SET @lastsave = @lastsave + 1
-END
-ELSE
-BEGIN 
-SET @lastsave = 1
-END 
-WHILE(@j<@i)
-BEGIN
-SET @j= @j+1
-DECLARE @box_id varchar(1)
-Declare @box_id_int int
-SELECT @box_id = substring(@mystring, @j, @j)
-SELECT @box_id_int = CAST(@box_id AS int)
-IF(@box_id_int=1)
-BEGIN
-INSERT INTO Box(Box_num,Box_id,
-Status,
-Save_id)values(@j, @box_id_int, 'ALIVE', @lastsave )
-END
-ELSE
-BEGIN
-INSERT INTO Box(Box_num,Box_id,
-Status,
-Save_id)values(@j, @box_id_int, 'DEAD', @lastsave )END
-END
-END
 
-EXEC getindb_Box @mystring = '010111101011100101';
-
-SELECT * FROM Box ORDER BY Save_id, Box_num
-
-CREATE PROCEDURE getindb_Save_State
-@Save_id int, 
-@Counter int, 
-@Box_row int,
-@Box_Column INT
-AS 
+DELIMITER //
+CREATE PROCEDURE getindb_Save_State (
+p_Save_id int, 
+p_Counter int, 
+p_Box_row int,
+p_Box_Column INT)
 BEGIN
 INSERT INTO Save_State (Save_id, 
 Counter, 
-Box_row, Box_Column) VALUES (@Save_id, 
-@Counter, 
-@Box_row, @Box_Column)
-END
-
-SELECT * FROM Save_State
-
-CREATE PROCEDURE Update_Counter
-@Counter int,
-@Save_id int
-AS
-BEGIN 
-Update Save_State
-SET Counter = @Counter
-WHERE Save_id = @Save_id
-END
-
-EXEC Update_Counter @Counter = 20, @Save_id = 1
-
-CREATE PROCEDURE Update_Grid_size
-@Grid_size int,
-@Save_id int
-AS
-BEGIN 
-Update Save_State
-SET Grid_size = @Grid_size
-WHERE Save_id = @Save_id
-END
-
-EXEC Update_Grid_size @Grid_size = 30, @Save_id = 1
+Box_row, Box_Column) VALUES (p_Save_id, 
+p_Counter, 
+p_Box_row, p_Box_Column);
+END;
+//
+DELIMITER ;
 
 
-INSERT INTO Save_State (Save_id, 
-Counter, 
-Box_row, Box_Column) VALUES (1, 2, 6, 3)
-
+DELIMITER //
+CREATE FUNCTION RemoveSaveState ( RSaveID INT )
+RETURNs int
+BEGIN
+   DECLARE StatusV int;
+   IF exists(select * FROM Save_State where Save_id=RSaveID) THEN
+      SET StatusV = 0;
+      delete from Save_State where Save_id=RSaveID;
+	  delete from Box where Save_id=RSaveID;
+   ELSE
+      SET StatusV = 2;
+   END IF;
+   RETURN StatusV;
+END; //
+DELIMITER ;

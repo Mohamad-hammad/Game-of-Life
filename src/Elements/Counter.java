@@ -1,5 +1,6 @@
 package Elements;
 
+//Class for keeping track of generations
 public class Counter {
 	int counter;
 	Counter(){
@@ -10,6 +11,9 @@ public class Counter {
 	}
 	public int GetCounter() {
 		return counter;
+	}
+	public void SetCounter(int s) {
+		counter=s;
 	}
 	public void ResetCounter() {
 		counter=0;
