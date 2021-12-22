@@ -7,7 +7,7 @@ public interface BL_Interface {
 	//Creates Database object via factory
 	public void CreateDB(String s1);
 	
-	public void Play(boolean flag,int arr[][]);
+	public void Play(boolean flag,int arr[][],int speed);
 	//Next Generation Created of an array sent to BL
 	public void Next(int arr[][]);
 	//Speed changed in the function of Play according to magnitude of integer

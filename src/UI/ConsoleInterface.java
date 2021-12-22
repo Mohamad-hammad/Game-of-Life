@@ -1,28 +1,25 @@
 package UI;
-
 import Elements.*;
 import Elements.BL_Interface;
-import Elements.Game;
 
 import java.util.*;
 import java.lang.Thread;
 import java.io.*;
 public class ConsoleInterface extends board{
     private BL_Interface  BL=new Elements.Game();
-
     //flag to keep a check on whether user has clicked the play button or not
     boolean play;
     //height and width of the grid
-     int height=20;
-     int width=30;
+     int height=202;
+     int width=302;
      int counter=0;
     //arrays to store current and next state/generation
     int Current_State[][] = new int[height][width];
     int[][] Next_State = new int[height][width];
-    //array to store the id's of all the states
-    private int[] statesid;
     //generation counter
     int countervalue=10;
+    //array to store the id's of all the states
+    private int[] statesid;
     public ConsoleInterface(){
         board b1=new board();
         b1.setHeight(height);
@@ -38,7 +35,11 @@ public class ConsoleInterface extends board{
         if(a=='S'){
             play = true;
         }
-
+       // BL.Play(play,Current_State);
+        //b1.Draw( width, height, Current_State);
+        //counter=BL.get_Counter();
+        //System.out.println("Counter value: ");
+        //System.out.println(counter);
         Timer time = new Timer();
         TimerTask task = new TimerTask(){
         public void run() {
@@ -52,7 +53,7 @@ public class ConsoleInterface extends board{
             System.out.println("Enter N to display next generation");
             char input = sc.next().charAt(0);
             if (input == 'M') {
-                BL.Play(play, Current_State);
+                BL.Play(play, Current_State,0);
                 b1.Draw(width, height, Current_State);
                 counter = BL.get_Counter();
                 System.out.println("Counter value: ");
@@ -94,6 +95,7 @@ public class ConsoleInterface extends board{
                 //save
                 BL.SaveState();
             }
+
             if (input == 'V') {
                 //view
                 System.out.println("----------------------View States--------------------------");
@@ -106,20 +108,20 @@ public class ConsoleInterface extends board{
                     }
                 }
                 System.out.println("Enter L to load state ");
+                System.out.println("Enter s to save state ");
                 System.out.println("Enter D to delete a saved state ");
                 char in = sc.next().charAt(0);
-                if (in == 'L') {
-                    //load
-                    System.out.println("Enter ID of the state you want to load");
-                    int num = sc.nextInt(); //intput which states to load
-                    BL.LoadSaveStates(num);
-                }
-                if (in == 'D') {
-                    //delete
-                    System.out.println("Enter ID of the state you want to delete");
-                    int num = sc.nextInt(); //intput which states to remove
-                    BL.DeleteStates(num);
-                }
+            if (in == 'L') {
+                //load
+                int num = sc.nextInt(); //intput which states to load
+                BL.LoadSaveStates(num);
+            }
+            if (in == 'D') {
+                //delete
+                System.out.println("Enter ID of the state you want to delete");
+                int num = sc.nextInt(); //intput which states to remove
+                BL.DeleteStates(num);
+            }
         }
             if(input=='C') {
                 System.out.println("Enter the coordinates of cell you want to make alive. x ,y ");

@@ -1,11 +1,12 @@
 package Elements;
 
 import DB.*;
+import Main.DB_Factory;
 
 public class Game implements BL_Interface {
 	Counter currCounter;
-	int CurrentX =302;//---------------------Width
-	int CurrentY =202;//---------------------Height
+	int CurrentX =300;//---------------------Width
+	int CurrentY =200;//---------------------Height
 	boolean flag = true;
 	Box grid[][] = new Box[CurrentY][CurrentX];
 	boolean PreReset[][] = new boolean[CurrentY][CurrentX];
@@ -14,17 +15,18 @@ public class Game implements BL_Interface {
 	
 	
 	String url = "jdbc:mysql://localhost:3306/db6?user=root&password=hanijani";
-	String FilePath = "C:\\Users\\Hani\\Documents\\GitHub\\Second_GOL\\src\\DB\\File.txt";	       
+	String FilePath = "C:\\Users\\mg\\Desktop\\SDA Project\\GOL2\\src\\DB\\File.txt";	
+	//String FilePath = "E:\\GUI_Proj\\file.txt";
     // ------
-	int[] box_row = new int[] {CurrentY-2};
-	int[] box_Column = new int[]{CurrentX-2};
+	int[] box_row = new int[] {CurrentY};
+	int[] box_Column = new int[]{CurrentX};
 	int[][] BOX = new int[box_row[0]][box_Column[0]];//2D int array of BOX
 	DBInterface Obj;
 	String DB_Path;
 	
 	public Game()
 	{	//hardcoded
-		CreateDB("SQL"); //hardcoded
+		//CreateDB("Text"); //hardcoded
 		currCounter = new Counter();
 		for (int i = 0; i < CurrentY; i++) {
 			for (int j = 0; j < CurrentX; j++) {
@@ -49,7 +51,7 @@ public class Game implements BL_Interface {
 	}
 	public void CreateDB(String s1) {
 		DB_Factory D_Fac= new DB_Factory();
-		Obj = D_Fac.getDB(s1);
+		Obj = D_Fac.getobj(s1);
 		if (s1.equals("SQL")) {
 			DB_Path = url;
 		}
@@ -70,9 +72,9 @@ public class Game implements BL_Interface {
     }
 	public void Reset_States(int arr[][])
 	{
-		for (int i = 1; i < CurrentY-1; i++)
+		for (int i = 0; i < CurrentY; i++)
 		{
-			for (int j = 1; j < CurrentX-1; j++)
+			for (int j = 0; j < CurrentX; j++)
 			{
 				if (PreReset[i][j]) {
 					arr[i][j]=1;
@@ -101,8 +103,8 @@ public class Game implements BL_Interface {
 		}
 		*/
 	
-		for (int j=1; j<CurrentY-1; ++j) {
-			for (int i=1; i<CurrentX-1;++i) {
+		for (int j=0; j<CurrentY; ++j) {
+			for (int i=0; i<CurrentX;++i) {
 				grid[j][i].SetAlive();
 				
 				
@@ -159,33 +161,81 @@ public class Game implements BL_Interface {
 			
 		currCounter.IncCounter();
 	}
-	
+	private int getneighbours(int i,int j)
+	{
+		 int neighbors = 0;
+	       
+	        if(j > 0){
+	            if(grid[i][j-1].GetState()==true) neighbors++;
+	            if(i>0) if(grid[i-1][j-1].GetState()==true) neighbors++;
+	            if(i<CurrentY-1) if(grid[i+1][j-1].GetState()==true) neighbors++;
+	        }
+	        if(j < CurrentX-1){
+	            if(grid[i][j+1].GetState()==true) neighbors++;
+	            if(i>0) if(grid[i-1][j+1].GetState()==true) neighbors++;
+	            if(i<CurrentY-1) if(grid[i+1][j+1].GetState()==true) neighbors++;
+	        }
+	        if(i>0) if(grid[i-1][j].GetState()==true) neighbors++;
+	        if(i<CurrentY-1) if(grid[i+1][j].GetState()==true) neighbors++;
+	        return neighbors;
+	}
+	 private int decide(int i, int j){
+	        int neighbors = 0;
+	       
+	        if(j > 0){
+	            if(grid[i][j-1].GetState()==true) neighbors++;
+	            if(i>0) if(grid[i-1][j-1].GetState()==true) neighbors++;
+	            if(i<CurrentY-1) if(grid[i+1][j-1].GetState()==true) neighbors++;
+	        }
+	        if(j < CurrentX-1){
+	            if(grid[i][j+1].GetState()==true) neighbors++;
+	            if(i>0) if(grid[i-1][j+1].GetState()==true) neighbors++;
+	            if(i<CurrentY-1) if(grid[i+1][j+1].GetState()==true) neighbors++;
+	        }
+	        if(i>0) if(grid[i-1][j].GetState()==true) neighbors++;
+	        if(i<CurrentY-1) if(grid[i+1][j].GetState()==true) neighbors++;
+	        if(neighbors == 3) return 1;
+	        if(grid[i][j].GetState()==true && neighbors == 2) return 1;
+	        return 0;
+	    }
 	@Override
-	public void Play(boolean flag,int arr[][])
+	public void Play(boolean flag,int arr[][],int speed)
 	{	
 		if(flag)
 		{
 			System.out.println("Next() Called: \n");
 			try
 			{
-				Thread.sleep(time_lapse);
+				Thread.sleep(speed*100);
 			}
 			catch(InterruptedException e) {
 				// this part is executed when an exception (in this example InterruptedException) occurs
 				System.out.println("Error in sleep \n");
 			}
 			
-			for (int i = 1; i < CurrentY-1; i++)
+			for (int i = 0; i < CurrentY; i++)
 			{
-				for (int j = 1; j < CurrentX-1; j++)
+				for (int j = 0; j < CurrentX; j++)
 				{
-					current[i][j] = CountAlive(GetNeighbors(grid[i][j]));
+					current[i][j] = getneighbours(i,j);
 				}
 			}
-			for (int i = 1; i < CurrentY-1; i++)
+			for (int i = 0; i < CurrentY; i++)
 			{ 
-				for (int j = 1; j < CurrentX-1; j++)
+				for (int j = 0; j < CurrentX; j++)
 				{
+					
+//					if(decide(i, j)==0)
+//					{
+//						grid[i][j].SetDead();
+//						arr[i][j]=0;
+//					}
+//					if(decide(i, j)==1)
+//					{
+//						grid[i][j].SetAlive();
+//						arr[i][j]=1;
+//					}
+						
 					if (current[i][j] == 1 || current[i][j] == 0) // Under Population
 					{
 						arr[i][j]=0;
@@ -212,9 +262,9 @@ public class Game implements BL_Interface {
 		}
 		else
 		{
-			for (int i = 1; i < CurrentY-1; i++)
+			for (int i = 0; i < CurrentY; i++)
 			{ 
-				for (int j = 1; j < CurrentX-1; j++)
+				for (int j = 0; j < CurrentX; j++)
 				{
 					arr[i][j]=grid[i][j].GetState()? 1 : 0;
 				}

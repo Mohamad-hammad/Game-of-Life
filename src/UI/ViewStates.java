@@ -58,18 +58,33 @@ public class ViewStates extends JFrame{
 		panel.add(LoadButton);
 		panel.add(RemoveButton);
 		statesid=BL.ViewSavedStates();
+		boolean myflag=true;
 		for(int i=0;i<statesid.length;i++)
 		{
-			 label[i] = new JLabel("State #"+statesid[i]);
-			 label[i].setPreferredSize(new Dimension(300, 25));
-			 label[i].setHorizontalAlignment(SwingConstants.CENTER);
-			 label[i].setVerticalAlignment(SwingConstants.CENTER);
-//			 LoadState[i]=new JButton("Load State");
-//			 RemoveState[i]=new JButton("Remove State");
-			 panel.add(label[i]);
-//			 panel.add(LoadState[i]);
-//			 panel.add(RemoveState[i]);
-			 
+			if(statesid[i]==-2)
+				myflag=false;
+			if(myflag)
+			{
+				 label[i] = new JLabel("State #"+statesid[i]);
+				 label[i].setPreferredSize(new Dimension(300, 25));
+				 label[i].setHorizontalAlignment(SwingConstants.CENTER);
+				 label[i].setVerticalAlignment(SwingConstants.CENTER);
+	//			 LoadState[i]=new JButton("Load State");
+	//			 RemoveState[i]=new JButton("Remove State");
+				 panel.add(label[i]);
+	//			 panel.add(LoadState[i]);
+	//			 panel.add(RemoveState[i]);
+			}
+			else
+			{
+				 label[i] = new JLabel("Empty");
+				 label[i].setPreferredSize(new Dimension(300, 25));
+				 label[i].setHorizontalAlignment(SwingConstants.CENTER);
+				 label[i].setVerticalAlignment(SwingConstants.CENTER);
+	//			 LoadState[i]=new JButton("Load State");
+	//			 RemoveState[i]=new JButton("Remove State");
+				 panel.add(label[i]);
+			}
 		}
 //		JLabel jlabel = new JLabel("This is a label");
 //		jlabel.setPreferredSize(new Dimension(300, 25));

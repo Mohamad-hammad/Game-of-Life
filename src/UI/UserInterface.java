@@ -38,7 +38,7 @@ import java.awt.*;
     private Button SaveStates_Button;
     private Button ZoomIn;
     private Button ZoomOut;
-    private int zoom_scale=1;
+    private int zoom_scale=0;
     private final int w=300;
     private final int h=200;
     private javax.swing.JPanel Panel;
@@ -47,13 +47,13 @@ import java.awt.*;
     private JLabel Counter_Label;
     private JLabel templabel;
     private Image offScrImg;
-    private JSlider speed_slider;
+    static JSlider speed_slider;
     private Graphics offScrGraph;
     //generation counter
     int countervalue=10;
     //height and width of the grid
-    int width = 302;
-    int height = 202;
+    int width = 300;
+    int height = 200;
     private JFrame frame;
     //arrays to store current and next state/generation
     int[][] Current_State = new int[height][width];
@@ -62,10 +62,28 @@ import java.awt.*;
     boolean Is_Playing;
     Grid grid;
     double generations=0;
-    public UserInterface(Game obj) {
+    public UserInterface(BL_Interface obj) {
+       
+    	 try {
+             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                 if ("Nimbus".equals(info.getName())) {
+                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                     break;
+                 }
+             }
+         } catch (ClassNotFoundException ex) {
+             java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         } catch (InstantiationException ex) {
+             java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         } catch (IllegalAccessException ex) {
+             java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+             java.util.logging.Logger.getLogger(UserInterface.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+         }
     	//GUIorConsole();
-    	BL=obj;
+        BL=obj;
         initComponents();
+        frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         offScrImg = frame.createImage(Panel.getWidth(), Panel.getHeight());
         offScrGraph = offScrImg.getGraphics();
         //create and draw grid
@@ -77,16 +95,16 @@ import java.awt.*;
             public void run(){
            
                     //Playthegame();
-            	    BL.Play(play,Current_State);
-            	    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-            	    counter.setText(String.valueOf(BL.get_Counter()));
-                    try {
-                        Thread.sleep(speed_slider.getValue()*50);
-                        
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                    BL.Play(play,Current_State,speed_slider.getValue());
+                    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+                    counter.setText(String.valueOf(BL.get_Counter()));
+//                    try {
+//                        Thread.sleep(speed_slider.getValue()*100);
+//                        System.out.printf("slider value = %d\n",speed_slider.getValue());
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
             }
         };
         time.scheduleAtFixedRate(task, 0, 100);
@@ -101,7 +119,7 @@ import java.awt.*;
     }
     
     //Remvoe this--------------------------------------------------
-  
+  /*
     private int decide(int i, int j){
         int neighbors = 0;
        
@@ -158,7 +176,7 @@ import java.awt.*;
             grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         }
     }
-    
+    */
     //Remove this ----------------------------------------------
   
     @SuppressWarnings("unchecked")
@@ -336,10 +354,10 @@ import java.awt.*;
               BL.Set_Cell_Alive(i, j);
           }
           else 
-    	  {
-    	  	Current_State[i][j] = 0;
-    	  	BL.Set_Cell_Dead(i, j);
-    	  }
+          {
+            Current_State[i][j] = 0;
+            BL.Set_Cell_Dead(i, j);
+          }
           grid.DrawGrid(Panel,offScrImg, offScrGraph,  width, height, Current_State);
     }
     private void jPanel1ComponentResized(java.awt.event.ComponentEvent evt) {
@@ -350,12 +368,12 @@ import java.awt.*;
         Is_Playing=play;
         Is_Playing = !Is_Playing;
         if(Is_Playing) 
-    	{
-        	Start_Button.Get_Button().setText("Pause");
-    	}
+        {
+            Start_Button.Get_Button().setText("Pause");
+        }
         else 
         {
-        	Start_Button.Get_Button().setText("Play");
+            Start_Button.Get_Button().setText("Play");
         }
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         play=Is_Playing;
@@ -366,12 +384,12 @@ import java.awt.*;
         if(!Is_Playing)
         {
             //PlayNext();
-        	BL.Next(Current_State);
-     	    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+            BL.Next(Current_State);
+            grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         }
     }
     private void SaveCurrentState(java.awt.event.ActionEvent evt) {
-    	BL.SaveState();
+        BL.SaveState();
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         //Current_State = new int[height][width];
@@ -391,15 +409,18 @@ import java.awt.*;
     }
     private void ZoomInClicked(java.awt.event.ActionEvent evt)
     {
-        if(zoom_scale<10)
+        if(zoom_scale<10 && width-30>=30 && height-20>=20)
         {
-            zoom_scale++;
-            if(width - (zoom_scale*20)>20 && height - (zoom_scale*20)>20 )
-            {
-                width=width - (zoom_scale*20);
-                height=height - (zoom_scale*20);
-                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-            }
+        	zoom_scale++;
+		    width=width - (30);
+		    height=height - (20);
+		    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+
+        }
+        else
+        {
+        	width=30;
+        	height=20;
         }
         
 
@@ -407,60 +428,57 @@ import java.awt.*;
     private void ZoomOutClicked(java.awt.event.ActionEvent evt)
     {
 
-        if(zoom_scale>=1)
+    	if(zoom_scale>1 && width+30<=300 && height+30<=200)
         {
-            zoom_scale--;
-            if(width + (zoom_scale*20)<400 && height + (zoom_scale*20)<300 )
-            {
-                width=width + (zoom_scale*20);
-                height=height + (zoom_scale*20);
-                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-            }
-            else
-            {
-                width=400;
-                height=300;
-                grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-            }
+        	zoom_scale--;
+		    width=width + (30);
+		    height=height + (20);
+		    grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
+
+        }
+        else
+        {
+        	width=300;
+        	height=200;
         }
     }
     private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {
         int j = width * evt.getX() / Panel.getWidth();
         int i = height * evt.getY() / Panel.getHeight();
         if(SwingUtilities.isLeftMouseButton(evt)){
-    	{
-    		Current_State[i][j] = 1;
-    		BL.Set_Cell_Alive(i, j);
-    	}
+        {
+            Current_State[i][j] = 1;
+            BL.Set_Cell_Alive(i, j);
+        }
         }else
         {
-        	Current_State[i][j] = 0;
-        	BL.Set_Cell_Dead(i, j);
+            Current_State[i][j] = 0;
+            BL.Set_Cell_Dead(i, j);
         }
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     }
     private void GUIorConsole()
     {
-    	System.out.print("in gui or console");
-    	JFrame tempframe=new JFrame("GUI OR CONSOLE");
-    	tempframe.getContentPane().setBackground( Color.decode("#3b444b") ); 
-    	tempframe.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    	JButton GUI = new JButton("GUI");
-    	JButton Console = new JButton("Console");
-    	tempframe.add(GUI);
-    	tempframe.add(Console);
-    	tempframe.pack();
-    	tempframe.setLocationByPlatform(true);
-    	tempframe.setVisible(false);
-    	tempframe.setResizable(true);
-    	Console.addActionListener(new java.awt.event.ActionListener() {
+        System.out.print("in gui or console");
+        JFrame tempframe=new JFrame("GUI OR CONSOLE");
+        tempframe.getContentPane().setBackground( Color.decode("#3b444b") ); 
+        tempframe.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        JButton GUI = new JButton("GUI");
+        JButton Console = new JButton("Console");
+        tempframe.add(GUI);
+        tempframe.add(Console);
+        tempframe.pack();
+        tempframe.setLocationByPlatform(true);
+        tempframe.setVisible(false);
+        tempframe.setResizable(true);
+        Console.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CallConsole(evt);
                 tempframe.setVisible(false); 
                 tempframe.dispose();
             }
         });
-    	GUI.addActionListener(new java.awt.event.ActionListener() {
+        GUI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CallGUI(evt);
                 tempframe.setVisible(false);
@@ -469,10 +487,10 @@ import java.awt.*;
         });
     }
     private void CallConsole(java.awt.event.ActionEvent evt) {
-    	System.out.print("call gui\n");
+        System.out.print("call gui\n");
     }
     private void CallGUI(java.awt.event.ActionEvent evt) {
-    	System.out.print("call console\n");
+        System.out.print("call console\n");
 
     }
 //    public static void main(String args[]) {

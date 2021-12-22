@@ -36,7 +36,7 @@ public class board {
         System.out.print("    |");
         for (int i = 0; i < box[0].length; i++) {
             System.out.print("    ");
-            System.out.print(i);
+            System.out.print(i + 1);
             System.out.print("    |");
         }
         System.out.println();
@@ -46,7 +46,7 @@ public class board {
                 System.out.print("---------+");
             }
             System.out.println();
-            System.out.print("  " + (i) + " |");
+            System.out.print("  " + (i + 1) + " |");
             for (int j = 0; j < box[0].length; j++) {
                 if (box[i][j].length() < 10) {
                     int spaces = (9 - box[i][j].length()) / 2;
