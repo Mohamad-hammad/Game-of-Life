@@ -1,27 +1,86 @@
 package Elements;
 
 import DB.*;
+import Main.Abstract_Factory;
 import Main.DB_Factory;
 
 public class Game implements BL_Interface {
 	Counter currCounter;
+	public Counter getCurrCounter() {
+		return currCounter;
+	}
+	public void setCurrCounter(Counter currCounter) {
+		this.currCounter = currCounter;
+	}
+	public int getCurrentX() {
+		return CurrentX;
+	}
+	public void setCurrentX(int currentX) {
+		CurrentX = currentX;
+	}
+	public int getCurrentY() {
+		return CurrentY;
+	}
+	public void setCurrentY(int currentY) {
+		CurrentY = currentY;
+	}
+	public int getTime_lapse() {
+		return time_lapse;
+	}
+	public void setTime_lapse(int time_lapse) {
+		this.time_lapse = time_lapse;
+	}
+	public DBInterface getObj() {
+		return Obj;
+	}
+	public void setObj(DBInterface obj) {
+		Obj = obj;
+	}
+	public int[] getBox_row() {
+		return box_row;
+	}
+	public void setBox_row(int[] box_row) {
+		this.box_row = box_row;
+	}
+	public int[] getBox_Column() {
+		return box_Column;
+	}
+	public void setBox_Column(int[] box_Column) {
+		this.box_Column = box_Column;
+	}
+	public int[][] getBOX() {
+		return BOX;
+	}
+	public void setBOX(int[][] bOX) {
+		BOX = bOX;
+	}
+
 	int CurrentX =300;//---------------------Width
 	int CurrentY =200;//---------------------Height
-	boolean flag = true;
+	int time_lapse; // Speed variable
+	DBInterface Obj;
 	Box grid[][] = new Box[CurrentY][CurrentX];
+	
+	
+	boolean flag = true;
 	boolean PreReset[][] = new boolean[CurrentY][CurrentX];
 	int current[][] = new int[CurrentY][CurrentX];
-	int time_lapse; // Speed variable
-	
-	
 	String url = "jdbc:mysql://localhost:3306/db6?user=root&password=hanijani";
-	String FilePath = "C:\\Users\\mg\\Desktop\\SDA Project\\GOL2\\src\\DB\\File.txt";	
+	String FilePath = "C:\\Users\\Hani\\Documents\\GitHub\\Game-of-Life\\src\\DB\\File.txt";	
 	//String FilePath = "E:\\GUI_Proj\\file.txt";
+	//String FilePath = "C:\\Users\\mg\\Desktop\\SDA Project\\GOL2\\src\\DB\\File.txt";
     // ------
 	int[] box_row = new int[] {CurrentY};
 	int[] box_Column = new int[]{CurrentX};
 	int[][] BOX = new int[box_row[0]][box_Column[0]];//2D int array of BOX
-	DBInterface Obj;
+	Abstract_Factory D_Fac;
+	public Abstract_Factory getD_Fac() {
+		return D_Fac;
+	}
+	public void setD_Fac(Abstract_Factory d_Fac) {
+		D_Fac = d_Fac;
+	}
+
 	String DB_Path;
 	
 	public Game()
@@ -50,7 +109,7 @@ public class Game implements BL_Interface {
 		//System.out.println("Alive: " + CountAlive(GetNeighbors(grid[150][150])));
 	}
 	public void CreateDB(String s1) {
-		DB_Factory D_Fac= new DB_Factory();
+		//D_Fac= new DB_Factory();
 		Obj = D_Fac.getobj(s1);
 		if (s1.equals("SQL")) {
 			DB_Path = url;

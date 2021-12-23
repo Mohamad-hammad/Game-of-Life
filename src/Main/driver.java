@@ -28,11 +28,12 @@ public class driver {
 	   Welcom1 window = new Welcom1();
 	   window.setframevisible();
 	   while(window.IsFrameVisible()) {
-		   System.out.println("\n");
+		   System.out.print(" ");
 		   }
 	   System.out.println("flag is false now\n");
        BL_Interface BL=new Game();
-       //DB_Factory f1 = new DB_Factory();
+       Abstract_Factory f1 = new DB_Factory();
+	   BL.setD_Fac(f1);
 	   BL.CreateDB("Text");
 	   UserInterface Game_UI = new UserInterface(BL);
        Game_UI.getframe().show();

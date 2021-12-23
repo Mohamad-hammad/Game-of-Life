@@ -1,5 +1,8 @@
 package Elements;
 
+import DB.DBInterface;
+import Main.Abstract_Factory;
+
 public interface BL_Interface {
 	//Dummy function to set some initial states as alive
 	void SetInitStates() ;
@@ -22,7 +25,7 @@ public interface BL_Interface {
 	public void DeleteStates(int s);
 	
 	
-	
+	public void setD_Fac(Abstract_Factory d_Fac);
 	public int get_Counter();
 	//Gets Neighbors of a particular box in a grid
 	public void Set_Cell_Alive(int x, int y);
