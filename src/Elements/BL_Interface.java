@@ -1,5 +1,5 @@
 package Elements;
-
+import org.json.*;
 import DB.DBInterface;
 import Main.Abstract_Factory;
 
@@ -8,28 +8,28 @@ public interface BL_Interface {
 	void SetInitStates() ;
 	
 	//Creates Database object via factory
-	public void CreateDB(String s1);
+	public void CreateDB(JSONObject Fac_J);
 	
-	public void Play(boolean flag,int arr[][],int speed);
+	public JSONObject Play(JSONObject s1);
 	//Next Generation Created of an array sent to BL
-	public void Next(int arr[][]);
+	public JSONObject Next(JSONObject s1);
 	//Speed changed in the function of Play according to magnitude of integer
 	public void ChangeSpeed(int i) ;
 	//Resets all values of Grid to dead
 	public void Reset(); 
 	//View list and number of Saved states
-	public int[] ViewSavedStates();
+	public JSONObject ViewSavedStates();
 	//Loads a particular state of a particular SavedState
-	public void LoadSaveStates(int s);
+	public void LoadSaveStates(JSONObject s2);
 	//Delete a particular state from the ones saved
-	public void DeleteStates(int s);
+	public void DeleteStates(JSONObject s2);
 	
 	
-	public void setD_Fac(Abstract_Factory d_Fac);
-	public int get_Counter();
+	public void setD_Fac(JSONObject Fac_J);
+	public JSONObject get_Counter();
 	//Gets Neighbors of a particular box in a grid
-	public void Set_Cell_Alive(int x, int y);
-	public void Set_Cell_Dead(int x, int y);
+	public void Set_Cell_Alive(JSONObject XY);
+	public void Set_Cell_Dead(JSONObject XY);
 	public void Reset_States(int arr[][]);
 	//Resets Counter=0, when new game started -- every time Play Button is pressed
 	public void Reset_Counter();

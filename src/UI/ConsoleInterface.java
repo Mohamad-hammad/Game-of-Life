@@ -53,9 +53,9 @@ public class ConsoleInterface extends board{
             System.out.println("Enter N to display next generation");
             char input = sc.next().charAt(0);
             if (input == 'M') {
-                BL.Play(play, Current_State,0);
+               // BL.Play(play, Current_State,0);
                 b1.Draw(width, height, Current_State);
-                counter = BL.get_Counter();
+              //  counter = BL.get_Counter();
                 System.out.println("Counter value: ");
                 System.out.println(counter);
             }
@@ -69,7 +69,7 @@ public class ConsoleInterface extends board{
                     System.out.println("Error in sleep \n");
                 }
                 b1.Draw(width, height, Current_State);
-                counter = BL.get_Counter();
+              //  counter = BL.get_Counter();
                 System.out.println("Counter value: ");
                 System.out.println(counter);
             }
@@ -87,7 +87,7 @@ public class ConsoleInterface extends board{
                 BL.Reset_States(Current_State);
                 b1.Draw(width, height, Current_State);
                 BL.Reset_Counter();
-                counter = BL.get_Counter();
+               // counter = BL.get_Counter();
                 System.out.println("Counter value: ");
                 System.out.println(counter);
             }
@@ -99,7 +99,7 @@ public class ConsoleInterface extends board{
             if (input == 'V') {
                 //view
                 System.out.println("----------------------View States--------------------------");
-                statesid = BL.ViewSavedStates();
+                //statesid = BL.ViewSavedStates();
                 System.out.println("LIST OF STATES");
                 for (int i = 0; i < statesid.length; i++) {
                     System.out.println(statesid[i]);
@@ -114,13 +114,13 @@ public class ConsoleInterface extends board{
             if (in == 'L') {
                 //load
                 int num = sc.nextInt(); //intput which states to load
-                BL.LoadSaveStates(num);
+               // BL.LoadSaveStates(num);
             }
             if (in == 'D') {
                 //delete
                 System.out.println("Enter ID of the state you want to delete");
                 int num = sc.nextInt(); //intput which states to remove
-                BL.DeleteStates(num);
+                //BL.DeleteStates(num);
             }
         }
             if(input=='C') {
@@ -128,17 +128,17 @@ public class ConsoleInterface extends board{
                 int x = sc.nextInt();
                 int y = sc.nextInt();
                 Current_State[x][y] = 1;
-                BL.Set_Cell_Alive(x, y);
+             //   BL.Set_Cell_Alive(x, y);
                 b1.Draw(width,height,Current_State);
-                counter=BL.get_Counter();
+                //counter=BL.get_Counter();
                 System.out.println("Counter value: ");
                 System.out.println(counter);
             }
             if(input=='N'){
                 System.out.println("Next Generation");
-                BL.Next(Current_State);
+               // BL.Next(Current_State);
                 b1.Draw(width,height,Current_State);
-                counter=BL.get_Counter();
+            //    counter=BL.get_Counter();
                 System.out.println(counter);
             }
         }

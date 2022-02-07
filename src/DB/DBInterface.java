@@ -2,12 +2,14 @@ package DB;
 
 import java.sql.SQLException;
 
+import org.json.JSONObject;
+
 public interface  DBInterface {
 	
-    public int 	 Save(int Box_Row[], int Box_Column[], int Box[][], int Counter[],String FilePath ); // interface method (does not have a body)
-    public int 	 Load(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[],String FilePath ); // interface method (does not have a body)
-    public int[] viewSaveId(String FilePath );
-    public int	 RemoveSaveId(int save_id,String FilePath);	  
+	 public JSONObject Save(JSONObject Save_Obj); // interface method (does not have a body)
+	 public JSONObject Load(JSONObject Save_Obj); // interface method (does not have a body)
+    public JSONObject viewSaveId	(JSONObject FP);
+    public JSONObject RemoveSaveId(JSONObject Remov);	  
     public int getCurrentSaveID(String FilePath) throws SQLException;
     public boolean CheckFileEmpty(String FilePath);
 }

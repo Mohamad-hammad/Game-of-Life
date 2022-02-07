@@ -1,7 +1,11 @@
 package UI;
+
+import org.json.*;
+import org.json.*;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.GroupLayout.Alignment;
+
 
 import Elements.BL_Interface;
 import Elements.Game;
@@ -15,6 +19,7 @@ public class ViewStates extends JFrame{
 	{
 		super("View States");
 		BL=obj;
+		System.out.print("i am in viewstates\n");
 		setBounds(100,100,450,300);
 		Container ControlHost= getContentPane();
 		ControlHost.setLayout(new BorderLayout());
@@ -57,9 +62,29 @@ public class ViewStates extends JFrame{
 		panel.add(input);
 		panel.add(LoadButton);
 		panel.add(RemoveButton);
-		statesid=BL.ViewSavedStates();
+		JSONObject StateIDs = new JSONObject();
+		StateIDs=BL.ViewSavedStates();
+		JSONArray jsonArry1 = null;
+        try {
+    		 jsonArry1 = StateIDs.getJSONArray("SavedStates");
+    	} catch (JSONException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}
+        statesid=new int[jsonArry1.length()];	    		
+        for(int j = 0; j<jsonArry1.length();j++){
+            try {
+            	statesid[j] = jsonArry1.getInt(j);
+				//System.out.print(jsa1.getInt(j)+" ");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    
+		
 		boolean myflag=true;
-		for(int i=0;i<statesid.length;i++)
+		for(int i=0;i<statesid.length;i++) 
 		{
 			if(statesid[i]==-2)
 				myflag=false;
@@ -119,12 +144,26 @@ public class ViewStates extends JFrame{
 
 	private void RemoveState(java.awt.event.ActionEvent evt) {
 		System.out.print("removing " + input.getText());
-		BL.DeleteStates( Integer.parseInt(input.getText()));
+		JSONObject s1=new JSONObject();
+		try {
+			s1.put("DeleteStates",input.getText());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BL.DeleteStates(s1);
 		this.dispose();
 	}
 	private void LoadState(java.awt.event.ActionEvent evt) {
 		System.out.print("loading " + input.getText());
-		BL.LoadSaveStates(Integer.parseInt(input.getText()));
+		JSONObject s1=new JSONObject();
+		try {
+			s1.put("LoadStates",input.getText());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BL.LoadSaveStates(s1);
 		this.dispose();
 	}
 	public JFrame GetFrame()

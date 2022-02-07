@@ -1,5 +1,5 @@
 package UI;
-
+import org.json.*;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import java.util.TimerTask;
@@ -53,6 +53,7 @@ import java.awt.*;
     int countervalue=10;
     //height and width of the grid
     int width = 300;
+    int mycounter=0;
     int height = 200;
     private JFrame frame;
     //arrays to store current and next state/generation
@@ -62,6 +63,71 @@ import java.awt.*;
     boolean Is_Playing;
     Grid grid;
     double generations=0;
+    
+    JSONObject GridToJson()
+    {
+    	JSONObject jsonobj = new JSONObject();
+	    try {
+	    	jsonobj.put("Speed", speed_slider.getValue());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    try {
+	    	jsonobj.put("Flag", play);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    JSONArray jsonArray = new JSONArray();
+	    for (int i=0;i<200;i++) {
+	      JSONArray jarr = new JSONArray();
+	      for (int j=0;j<300;j++) {
+	        jarr.put(Integer.toString(Current_State[i][j])); // or some other conversion
+	      }
+	      jsonArray.put(jarr);
+	    }
+	    
+	    try {
+	    	jsonobj.put("Grid", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return jsonobj;
+    }
+    void JSONobjTOGrid(int gridarr[][],JSONObject obj )
+    {
+    	JSONArray jsonArry1 = null;
+        try {
+    		 jsonArry1 = obj.getJSONArray("Grid");
+    	} catch (JSONException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}
+        for(int i = 0; i<200; i++){
+            JSONArray jsa1 = null;
+    		try {
+    			jsa1 = jsonArry1.getJSONArray(i);
+//    			System.out.print("\n-----------------------\n");
+//    			System.out.print(jsa1);
+//    			System.out.print("\n-----------------\n");
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+            for(int j = 0; j<jsa1.length();j++){
+                try {
+                	gridarr[i][j] = jsa1.getInt(j);
+    				//System.out.print(jsa1.getInt(j)+" ");
+    			} catch (JSONException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+            }
+        }
+    }
     public UserInterface(BL_Interface obj) {
        
     	 try {
@@ -82,6 +148,8 @@ import java.awt.*;
          }
     	//GUIorConsole();
         BL=obj;
+        
+        
         initComponents();
         frame.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         offScrImg = frame.createImage(Panel.getWidth(), Panel.getHeight());
@@ -95,9 +163,25 @@ import java.awt.*;
             public void run(){
            
                     //Playthegame();
-                    BL.Play(play,Current_State,speed_slider.getValue());
+            	    
+                   // BL.Play(play,Current_State,speed_slider.getValue());
+            	    System.out.print("going into play\n");
+            	    JSONObject jsonobj2 = new JSONObject();
+            	    jsonobj2=BL.Play(GridToJson());
+            	    JSONobjTOGrid(Current_State,jsonobj2);
                     grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
-                    counter.setText(String.valueOf(BL.get_Counter()));
+                    JSONObject myobe=new JSONObject();
+                    int mycouunter=0;
+                    try {
+                    	mycouunter=myobe.getInt("DeleteStates");
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                    counter.setText(String.valueOf(mycounter));
+                  
+                   // Current_State= (int[][]) jsonobj.stringToValue("Grid");
+                    
 //                    try {
 //                        Thread.sleep(speed_slider.getValue()*100);
 //                        System.out.printf("slider value = %d\n",speed_slider.getValue());
@@ -105,6 +189,8 @@ import java.awt.*;
 //                        // TODO Auto-generated catch block
 //                        e.printStackTrace();
 //                    }
+                    if(Is_Playing)
+                        mycounter++;
             }
         };
         time.scheduleAtFixedRate(task, 0, 100);
@@ -351,12 +437,41 @@ import java.awt.*;
           if(SwingUtilities.isLeftMouseButton(evt))
           {
               Current_State[i][j] = 1;
-              BL.Set_Cell_Alive(i, j);
+              JSONObject s1=new JSONObject();
+				try {
+					s1.put("X",i);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					s1.put("Y",j);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+              BL.Set_Cell_Alive(s1);
           }
           else 
           {
             Current_State[i][j] = 0;
-            BL.Set_Cell_Dead(i, j);
+            JSONObject s1=new JSONObject();
+    		try {
+    			s1.put("X",i);
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+    		try {
+    			s1.put("Y",j);
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+            BL.Set_Cell_Dead(s1);
           }
           grid.DrawGrid(Panel,offScrImg, offScrGraph,  width, height, Current_State);
     }
@@ -384,7 +499,10 @@ import java.awt.*;
         if(!Is_Playing)
         {
             //PlayNext();
-            BL.Next(Current_State);
+        	JSONObject jsonobj2 = new JSONObject();
+     	    jsonobj2=BL.Next(GridToJson());
+     	    JSONobjTOGrid(Current_State,jsonobj2);
+           // BL.Next(Current_State);
             grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
         }
     }
@@ -447,13 +565,42 @@ import java.awt.*;
         int i = height * evt.getY() / Panel.getHeight();
         if(SwingUtilities.isLeftMouseButton(evt)){
         {
-            Current_State[i][j] = 1;
-            BL.Set_Cell_Alive(i, j);
+        	 Current_State[i][j] = 1;
+             JSONObject s1=new JSONObject();
+				try {
+					s1.put("X",i);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					s1.put("Y",j);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+             BL.Set_Cell_Alive(s1);
         }
         }else
         {
-            Current_State[i][j] = 0;
-            BL.Set_Cell_Dead(i, j);
+        	Current_State[i][j] = 0;
+            JSONObject s1=new JSONObject();
+    		try {
+    			s1.put("X",i);
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+    		try {
+    			s1.put("Y",j);
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+            BL.Set_Cell_Dead(s1);
         }
         grid.DrawGrid(Panel,offScrImg, offScrGraph, width, height, Current_State);
     }

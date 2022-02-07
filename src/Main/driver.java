@@ -1,6 +1,7 @@
 package Main;
 
 import Elements.BL_Interface;
+import org.json.*;
 import UI.Welcom1;
 import Elements.Game;
 import UI.UserInterface;
@@ -33,8 +34,22 @@ public class driver {
 	   System.out.println("flag is false now\n");
        BL_Interface BL=new Game();
        Abstract_Factory f1 = new DB_Factory();
-	   BL.setD_Fac(f1);
-	   BL.CreateDB("Text");
+       JSONObject Fac_J = new JSONObject();
+       try {
+		Fac_J.put("Factory", f1);
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+       try {
+		Fac_J.put("DB_Type", "Text");
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	   BL.setD_Fac(Fac_J);
+	   BL.CreateDB(Fac_J);
+	   //BL.toJSONStr();
 	   UserInterface Game_UI = new UserInterface(BL);
        Game_UI.getframe().show();
    }

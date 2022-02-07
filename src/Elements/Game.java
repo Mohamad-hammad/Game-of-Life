@@ -1,5 +1,5 @@
 package Elements;
-
+import org.json.*;
 import DB.*;
 import Main.Abstract_Factory;
 import Main.DB_Factory;
@@ -66,7 +66,7 @@ public class Game implements BL_Interface {
 	boolean PreReset[][] = new boolean[CurrentY][CurrentX];
 	int current[][] = new int[CurrentY][CurrentX];
 	String url = "jdbc:mysql://localhost:3306/db6?user=root&password=hanijani";
-	String FilePath = "C:\\Users\\Hani\\Documents\\GitHub\\Game-of-Life\\src\\DB\\File.txt";	
+	String FilePath = "E:\\file.txt";	
 	//String FilePath = "E:\\GUI_Proj\\file.txt";
 	//String FilePath = "C:\\Users\\mg\\Desktop\\SDA Project\\GOL2\\src\\DB\\File.txt";
     // ------
@@ -77,8 +77,15 @@ public class Game implements BL_Interface {
 	public Abstract_Factory getD_Fac() {
 		return D_Fac;
 	}
-	public void setD_Fac(Abstract_Factory d_Fac) {
-		D_Fac = d_Fac;
+	@Override
+	public void setD_Fac(JSONObject Fac_J) {
+		try {
+			D_Fac =(Abstract_Factory) Fac_J.get("Factory");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// d_Fac;
 	}
 
 	String DB_Path;
@@ -108,7 +115,14 @@ public class Game implements BL_Interface {
 		//int alive = CountAlive(GetNeighbors(grid[150][150]));
 		//System.out.println("Alive: " + CountAlive(GetNeighbors(grid[150][150])));
 	}
-	public void CreateDB(String s1) {
+	public void CreateDB(JSONObject Fac_J) {
+		String s1= null;
+		try {
+			s1 = Fac_J.getString("DB_Type");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//D_Fac= new DB_Factory();
 		Obj = D_Fac.getobj(s1);
 		if (s1.equals("SQL")) {
@@ -148,9 +162,16 @@ public class Game implements BL_Interface {
 		}
 		Reset_Counter();	//Generations will go back to 0
 	}
-	public int get_Counter()
+	public JSONObject get_Counter()
 	{
-		return currCounter.GetCounter();
+		JSONObject s1=new JSONObject();
+		try {
+			s1.put("DeleteStates",currCounter.GetCounter());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s1;
 	}
 	@Override
 	public void SetInitStates() {
@@ -171,8 +192,154 @@ public class Game implements BL_Interface {
 		}
 	
 	}
+	
+	public JSONObject Next(JSONObject s1) {
+//	    try {
+//			System.out.println(s1.toString(4));
+//		} catch (JSONException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
+		boolean flag = false;
+		int arr[][];
+		int speed =1000;
+		
+		try {
+			speed=s1.getInt("Speed");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			flag=s1.getBoolean("Flag");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		//arr= (int[][]) s1.stringToValue("Grid");
+		arr=new int [200][300];
+		//-=-----------------------------testing array----------------
+		//JSONObject jsonObj = new JSONObject(s1);
+		JSONArray jsonArry1 = null;
+	    try {
+			 jsonArry1 = s1.getJSONArray("Grid");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    for(int i = 0; i<200; i++){
+	        JSONArray jsa1 = null;
+			try {
+				jsa1 = jsonArry1.getJSONArray(i);
+//				System.out.print("\n-----------------------\n");
+//				System.out.print(jsa1);
+//				System.out.print("\n-----------------\n");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	        for(int j = 0; j<jsa1.length();j++){
+	            try {
+					arr[i][j] = jsa1.getInt(j);
+					//System.out.print(jsa1.getInt(j)+" ");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
 
-	@Override
+
+	    }
+		//---------------------------------------------------------
+		System.out.print("grid in bl: \n");
+		//System.out.println(arr);
+//		for (int i = 0; i < 200; i++) {
+//	        for (int j = 0; j < 300; j++)
+//	            System.out.print(arr[i][j] + " ");
+//	        System.out.print("\n");
+//	        }
+		//public void Play(boolean flag,int arr[][],int speed)	
+			
+		
+		
+		for (int i = 0; i < CurrentY; i++)
+		{
+			for (int j = 0; j < CurrentX; j++)
+			{
+				current[i][j] = getneighbours(i,j);
+			}
+		}
+		for (int i = 0; i < CurrentY; i++)
+		{ 
+			for (int j = 0; j < CurrentX; j++)
+			{
+				
+//							if(decide(i, j)==0)
+//							{
+//								grid[i][j].SetDead();
+//								arr[i][j]=0;
+//							}
+//							if(decide(i, j)==1)
+//							{
+//								grid[i][j].SetAlive();
+//								arr[i][j]=1;
+//							}
+					
+				if (current[i][j] == 1 || current[i][j] == 0) // Under Population
+				{
+					arr[i][j]=0;
+					grid[i][j].SetDead();
+				}
+				else if(current[i][j] >= 4) // Over Population
+				{
+					arr[i][j]=0;
+					grid[i][j].SetDead();
+				}
+				else if(current[i][j] == 2 || current[i][j] == 3)	//Populated
+				{
+					if (grid[i][j].GetState() == false && current[i][j] == 3)
+					{
+						arr[i][j]=1;
+						grid[i][j].SetAlive();
+					}
+				}
+			}
+		}
+
+			
+		currCounter.IncCounter();
+	
+	
+			//create an json obejct to return
+			JSONObject jsonobj = new JSONObject();
+		    try {
+		    	jsonobj.put("Speed",speed);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		    
+		    JSONArray jsonArray = new JSONArray();
+		    for (int i=0;i<200;i++) {
+		      JSONArray jarr = new JSONArray();
+		      for (int j=0;j<300;j++) {
+		        jarr.put(Integer.toString(arr[i][j])); // or some other conversion
+		      }
+		      jsonArray.put(jarr);
+		    }
+		    
+		    try {
+		    	jsonobj.put("Grid", jsonArray);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return jsonobj;
+		}
+		
+	/*@Override
 	public void Next(int arr[][])
 	{	
 		System.out.println("Next() Called: \n");
@@ -219,7 +386,7 @@ public class Game implements BL_Interface {
 
 			
 		currCounter.IncCounter();
-	}
+	}*/
 	private int getneighbours(int i,int j)
 	{
 		 int neighbors = 0;
@@ -257,9 +424,75 @@ public class Game implements BL_Interface {
 	        if(grid[i][j].GetState()==true && neighbors == 2) return 1;
 	        return 0;
 	    }
+	 @SuppressWarnings("static-access")
 	@Override
-	public void Play(boolean flag,int arr[][],int speed)
-	{	
+	public JSONObject Play(JSONObject s1) {
+//    try {
+//		System.out.println(s1.toString(4));
+//	} catch (JSONException e2) {
+//		// TODO Auto-generated catch block
+//		e2.printStackTrace();
+//	}
+	boolean flag = false;
+	int arr[][];
+	int speed =1000;
+	
+	try {
+		speed=s1.getInt("Speed");
+	} catch (JSONException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	try {
+		flag=s1.getBoolean("Flag");
+	} catch (JSONException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	//arr= (int[][]) s1.stringToValue("Grid");
+	arr=new int [200][300];
+	//-=-----------------------------testing array----------------
+	//JSONObject jsonObj = new JSONObject(s1);
+	JSONArray jsonArry1 = null;
+    try {
+		 jsonArry1 = s1.getJSONArray("Grid");
+	} catch (JSONException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+    for(int i = 0; i<200; i++){
+        JSONArray jsa1 = null;
+		try {
+			jsa1 = jsonArry1.getJSONArray(i);
+//			System.out.print("\n-----------------------\n");
+//			System.out.print(jsa1);
+//			System.out.print("\n-----------------\n");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        for(int j = 0; j<jsa1.length();j++){
+            try {
+				arr[i][j] = jsa1.getInt(j);
+				//System.out.print(jsa1.getInt(j)+" ");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+
+
+    }
+	//---------------------------------------------------------
+	System.out.print("grid in bl: \n");
+	//System.out.println(arr);
+//	for (int i = 0; i < 200; i++) {
+//        for (int j = 0; j < 300; j++)
+//            System.out.print(arr[i][j] + " ");
+//        System.out.print("\n");
+//        }
+	//public void Play(boolean flag,int arr[][],int speed)	
 		if(flag)
 		{
 			System.out.println("Next() Called: \n");
@@ -284,16 +517,16 @@ public class Game implements BL_Interface {
 				for (int j = 0; j < CurrentX; j++)
 				{
 					
-//					if(decide(i, j)==0)
-//					{
-//						grid[i][j].SetDead();
-//						arr[i][j]=0;
-//					}
-//					if(decide(i, j)==1)
-//					{
-//						grid[i][j].SetAlive();
-//						arr[i][j]=1;
-//					}
+//						if(decide(i, j)==0)
+//						{
+//							grid[i][j].SetDead();
+//							arr[i][j]=0;
+//						}
+//						if(decide(i, j)==1)
+//						{
+//							grid[i][j].SetAlive();
+//							arr[i][j]=1;
+//						}
 						
 					if (current[i][j] == 1 || current[i][j] == 0) // Under Population
 					{
@@ -330,7 +563,35 @@ public class Game implements BL_Interface {
 			}
 				
 		}
+		
+		//create an json obejct to return
+		JSONObject jsonobj = new JSONObject();
+	    try {
+	    	jsonobj.put("Speed",speed);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    
+	    JSONArray jsonArray = new JSONArray();
+	    for (int i=0;i<200;i++) {
+	      JSONArray jarr = new JSONArray();
+	      for (int j=0;j<300;j++) {
+	        jarr.put(Integer.toString(arr[i][j])); // or some other conversion
+	      }
+	      jsonArray.put(jarr);
+	    }
+	    
+	    try {
+	    	jsonobj.put("Grid", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonobj;
 	}
+		
 	@Override
 	public void ChangeSpeed(int i ) {
 		if ((i>0)&&( (time_lapse-(i*100)) > 200)) {
@@ -355,24 +616,134 @@ public class Game implements BL_Interface {
 	
 	//-----------------------------VIEW SAVE STATES
 	@Override
-	public int[] ViewSavedStates() {
+	public JSONObject ViewSavedStates() {
 		
- 		int arr[] = Obj.viewSaveId(DB_Path);
-        /*
- 		for (int i = 0; arr[i]!=-2; i++) {
-        	System.out.println("Save ID " + (i+1) +": "+arr[i]);//Can be commented
-        }
- 		*/
- 		
-		return arr;
+ 		int arr[] = {};
+        JSONObject FP = new JSONObject();
+        
+        try {
+			FP.put("FilePath", DB_Path);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+ 		JSONObject jsonobj=new JSONObject();
+ 		jsonobj = Obj.viewSaveId(FP);
+ 		JSONArray myarr=new JSONArray();
+ 		try {
+			myarr=jsonobj.getJSONArray("Saved_IDs");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+ 		arr=new int[myarr.length()];
+ 		for(int i=0;i<myarr.length();i++) {
+			try {
+				arr[i]=myarr.getInt(i);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+ 		}
+ 		JSONArray jsonArray = new JSONArray();
+ 		for(int i=0;arr[i]!=-2;i++)
+	     jsonArray.put(Integer.toString(arr[i]));
+	    
+	    
+	    try {
+	    	jsonobj.put("SavedStates", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+		return jsonobj;
 	}
 	
 	
 	//----------------------------------LOAD STATES
 	@Override
-	public void LoadSaveStates(int s){
+	public void LoadSaveStates(JSONObject s1){
 		int[] Counter= new int[] {currCounter.GetCounter()};
-		int x=Obj.Load(box_row, box_Column, BOX, s, Counter, DB_Path);
+		
+		JSONObject Load_Obj = new JSONObject();
+		JSONObject Save_C = new JSONObject();
+	
+		try {
+			Load_Obj.put("Row", box_row[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Load_Obj.put("Column", box_Column[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Load_Obj.put("Counter", Counter[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Load_Obj.put("FilePath", DB_Path);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		int [][]myarr=this.BoxToInt();
+		JSONArray jsonArray = new JSONArray();
+	    for (int i=0;i<200;i++) {
+	      JSONArray jarr = new JSONArray();
+	      for (int j=0;j<300;j++) {
+	        jarr.put(Integer.toString(myarr[i][j])); // or some other conversion
+	      }
+	      jsonArray.put(jarr);
+	    }
+
+	    try {
+	    	Load_Obj.put("Grid", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+//		try {
+//			Load_Obj.put("Grid", this.BoxToInt());
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		int s=-1;
+		try {
+			s=s1.getInt("LoadStates");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
+		try {
+			Load_Obj.put("Save_ID", s);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		JSONObject Load_C=Obj.Load(Load_Obj);
+	
+		int x=1;
+		try {
+			x = Load_C.getInt("returnv");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (x==0) {
 			System.out.println("Loaded!");
 		}
@@ -381,6 +752,37 @@ public class Game implements BL_Interface {
 			//return this.BoxToInt();
 		}
 		currCounter.SetCounter(Counter[0]);
+		
+		JSONArray jsonArry1 = null;
+        try {
+    		 jsonArry1 = Load_C.getJSONArray("Grid");
+    	} catch (JSONException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}
+        for(int i = 0; i<200; i++){
+            JSONArray jsa1 = null;
+    		try {
+    			jsa1 = jsonArry1.getJSONArray(i);
+//    			System.out.print("\n-----------------------\n");
+//    			System.out.print(jsa1);
+//    			System.out.print("\n-----------------\n");
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		
+            for(int j = 0; j<jsa1.length();j++){
+                try {
+                	BOX[i][j] = jsa1.getInt(j);
+    				//System.out.print(jsa1.getInt(j)+" ");
+    			} catch (JSONException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+            }
+        }
+        
 		this.IntToBox(BOX);//Saved in Current BL Grid
 		
 		//return this.BoxToInt();
@@ -390,8 +792,35 @@ public class Game implements BL_Interface {
 	
 	//-----------------------------DELETE STATES
 	@Override
-	public void DeleteStates(int s){
-		int x=Obj.RemoveSaveId(s,DB_Path);
+	public void DeleteStates(JSONObject s1){
+		int s=-1;
+		try {
+			s=s1.getInt("DeleteStates");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		JSONObject Remov = new JSONObject();
+		try {
+			Remov.put("save_id", s);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Remov.put("FilePath", DB_Path);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Remov=Obj.RemoveSaveId(Remov);
+		int x=0;
+		try {
+			x = Remov.getInt("returnv");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	       if (x==0) {
 				System.out.println("Removed!");
 			}
@@ -406,8 +835,64 @@ public class Game implements BL_Interface {
 	@Override
 	public void SaveState() {
 		int[] Counter= new int[] {currCounter.GetCounter()};
-		int Save_Check=Obj.Save(box_row, box_Column, this.BoxToInt(),Counter, DB_Path);
-	       
+		JSONObject Save_Obj = new JSONObject();
+		JSONObject Save_C = new JSONObject();
+		try {
+			Save_Obj.put("Row", box_row[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Save_Obj.put("Column", box_Column[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Save_Obj.put("Counter", Counter[0]);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Save_Obj.put("FilePath", DB_Path);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int [][]myarr=this.BoxToInt();
+		JSONArray jsonArray = new JSONArray();
+	    for (int i=0;i<200;i++) {
+	      JSONArray jarr = new JSONArray();
+	      for (int j=0;j<300;j++) {
+	        jarr.put(Integer.toString(myarr[i][j])); // or some other conversion
+	      }
+	      jsonArray.put(jarr);
+	    }
+
+	    try {
+	    	Save_Obj.put("Grid", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+//		try {
+//			Save_Obj.put("Grid", this.BoxToInt());
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		Save_C=Obj.Save(Save_Obj);
+	    int Save_Check=1;
+		try {
+			Save_Check = Save_C.getInt("returnv");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
 	       if(Save_Check==0) {
 				System.out.println("Grid with Counter: "+Counter[0]+" Saved!!");
 			}
@@ -418,13 +903,39 @@ public class Game implements BL_Interface {
 	
 	
 	@Override
-	public void Set_Cell_Dead(int x , int y)
+	public void Set_Cell_Dead(JSONObject XY)
 	{
+		int x=0,y=0;
+		try {
+			x=XY.getInt("X");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			y=XY.getInt("Y");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		grid[x][y].SetDead();
 		System.out.printf("set dead at x = %d - y = %d \n",x,y);
 	}
 	@Override
-	public void Set_Cell_Alive(int x, int y) {//set these cordinate box as alive
+	public void Set_Cell_Alive(JSONObject XY) {//set these cordinate box as alive
+		int x=0,y=0;
+		try {
+			x=XY.getInt("X");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			y=XY.getInt("Y");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		grid[x][y].SetAlive();
 		System.out.printf("set alive at x = %d - y = %d \n",x,y);
 	}

@@ -116,13 +116,13 @@ public class Welcom1 {
 		Fgcb.setForeground(Color.WHITE);
 		Fgcb.setFont(new Font("Montserrat SemiBold", Font.BOLD, 21));
 		Fgcb.setText("			How to Play\r\n\n"
-		        + "1: Left click to set a box in the grid alive\r\n"
-				+ "2: Right click boxes to mark as dead\r\n"
-				+ "3: Next Button produces one new generation\r\n"
-				+ "4: Play button will produce new generations in a loop\r\n"
-				+ "5: Pause button will be pressed to break loop of Play button\r\n"
-				+ "6: Counter display the number of current generation\r\n"
-				+ "7: Use slider to adjust speed and buttons for zoom");
+		        + "Click to set a box in the grid alive\r\n"
+				+ "Click on highlighted boxes to mark as dead\r\n"
+				+ "Next Button produces one new generation\r\n"
+				+ "Play button will produce new generations in a loop\r\n"
+				+ "Pause button will be pressed to break loop of Play button\r\n"
+				+ "Counter display the number of current generation\r\n"
+				+ "Use slider to adjust speed and buttons for zoom");
 		panel_3.add(Fgcb);
 		
 		JButton btnNewButton = new JButton("Play");
@@ -135,24 +135,24 @@ public class Welcom1 {
 		});
 		panel_2.add(btnNewButton);
 		
-//		JTextPane txtpn = new JTextPane();
-//		txtpn.setBackground(Color.BLACK);
-//		txtpn.setForeground(Color.WHITE);
-//		txtpn.setFont(new Font("Montserrat SemiBold", Font.BOLD, 21));
-//		txtpn.setText("			\t\tRULES\r\n\n"
-//				+ "1.Any live cell with two or three live neighbours survives.\r\n"
-//				+ "2.Any dead cell with three live neighbours becomes a live cell.\r\n"
-//				+ "3.All other live cells die in the next generation. Similarly, all other dead cells stay dead.\r\n"
-//				+ "4.left click to make cell alive.\r\n"
-//				+ "5.right click to make cell dead.");
-//		panel_1.add(txtpn);
-//		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-//		
+		JTextPane txtpn = new JTextPane();
+		txtpn.setBackground(Color.BLACK);
+		txtpn.setForeground(Color.WHITE);
+		txtpn.setFont(new Font("Montserrat SemiBold", Font.BOLD, 21));
+		txtpn.setText("			\t\tRULES\r\n\n"
+				+ "1.Any live cell with two or three live neighbours survives.\r\n"
+				+ "2.Any dead cell with three live neighbours becomes a live cell.\r\n"
+				+ "3.All other live cells die in the next generation. Similarly, all other dead cells stay dead.\r\n"
+				+ "4.left click to make cell alive.\r\n"
+				+ "5.right click to make cell dead.");
+		panel_1.add(txtpn);
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBackground(new Color(255, 0, 0));
 		lblNewLabel.setForeground(new Color(102, 205, 170));
 		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\mg\\Desktop\\SDA Project\\GOL2\\src\\UI\\Title.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\PC-X\\Downloads\\Untitled design (1).png"));
 		panel.add(lblNewLabel);
 		frame.getContentPane().setLayout(groupLayout);
 	}

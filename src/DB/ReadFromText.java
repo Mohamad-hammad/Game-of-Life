@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.File;
 import java.util.LinkedList;
 import java.sql.*;
+import org.json.*;
 
 public class ReadFromText implements DBInterface {
 
@@ -71,8 +72,15 @@ public class ReadFromText implements DBInterface {
         return Saveid;
     }
 
-    public int[] viewSaveId(String FilePath){
-        
+    public JSONObject viewSaveId(JSONObject FP){
+    	JSONObject jsonobj = new JSONObject();
+    	String FilePath=null;
+		try {
+			FilePath = FP.getString("FilePath");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     	int arr[] = new int[100];
         int j = 0;
         int boxRow;
@@ -90,7 +98,19 @@ public class ReadFromText implements DBInterface {
                 myReader.close();
                 arr[0]=-1;
                 arr[1]=-2;
-                return arr;
+                JSONArray jsonArray = new JSONArray();
+         	
+        	     jsonArray.put(Integer.toString(arr[0]));
+        	     jsonArray.put(Integer.toString(arr[1]));
+        	     
+                //return arr;
+                try {
+        			jsonobj.put("Saved_IDs", jsonArray);
+        		} catch (JSONException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+                return jsonobj;
             }
     
 
@@ -149,10 +169,36 @@ public class ReadFromText implements DBInterface {
             e.printStackTrace();
         }
         arr[j]=-2;
-        return arr;
+        //return arr;
+        JSONArray jsonArray = new JSONArray();
+ 		for(int i=0;i<=j;i++)
+	     jsonArray.put(Integer.toString(arr[i]));
+        try {
+			jsonobj.put("Saved_IDs", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return jsonobj;
     }
     
-    public int RemoveSaveId(int save_id,String FilePath){
+    public JSONObject RemoveSaveId(JSONObject Remov){
+    	
+    	int save_id=0;
+    	String FilePath=null;
+    	try {
+			save_id = Remov.getInt("save_id");
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+    	try {
+			FilePath = Remov.getString("FilePath");
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+    	JSONObject retObj = new JSONObject();
     
     	Stack<String> s1 = new Stack<String>();  	
        	Stack<String> s2 = new Stack<String>();      	  
@@ -167,7 +213,14 @@ public class ReadFromText implements DBInterface {
 
             if(CheckFileEmpty(FilePath)==true){
                 myReader.close();
-                return 2;
+                //return 2;
+                try {
+					retObj.put("returnv", 2);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                return retObj;
             }
             else{}
 
@@ -183,7 +236,13 @@ public class ReadFromText implements DBInterface {
                        
             if((save_id1<save_id)||(save_id<0)) {
             myReader.close();
-            	return 3;	
+            try {
+				retObj.put("returnv", 3);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+            return retObj;
             }
             else {}
             
@@ -280,7 +339,13 @@ public class ReadFromText implements DBInterface {
     	
     	catch (FileNotFoundException e) {
             System.out.println("File Not Found!");
-            return -1;
+            try {
+				retObj.put("returnv", -1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            return retObj;
         }
     	
 
@@ -320,13 +385,96 @@ public class ReadFromText implements DBInterface {
 		}
 		catch (FileNotFoundException e) {
 			 //TODO Auto-generated catch block
-			return -1;
+			try {
+				retObj.put("returnv", -1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            return retObj;
 		}
             
-		return 0;
+		try {
+			retObj.put("returnv", 0);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return retObj;
 	}   
     
-    public int Save(int Box_Row[], int Box_Column[], int Box[][],int Counter[], String FilePath) { // interface method (does not have a body)
+    //public int Save(int Box_Row[], int Box_Column[], int Box[][],int Counter[], String FilePath) { // interface method (does not have a body)
+    public JSONObject Save(JSONObject Save_Obj){
+    	JSONObject retObj = new JSONObject();
+    	int Box_Row[]= new int[1] ;
+    	try {
+			Box_Row[0]= Save_Obj.getInt("Row");
+		} catch (JSONException e5) {
+			// TODO Auto-generated catch block
+			e5.printStackTrace();
+		}      
+    	
+    	int Box_Column[]=new int[1] ;
+    	try {
+			Box_Column[0]= Save_Obj.getInt("Column");
+		} catch (JSONException e4) {
+			// TODO Auto-generated catch block
+			e4.printStackTrace();
+		}      
+    	
+    	int Counter[]=new int[1] ;
+    	try {
+			Counter[0]= Save_Obj.getInt("Counter");
+		} catch (JSONException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}      
+    	
+    	String FilePath= null;
+		try {
+			FilePath = Save_Obj.getString("FilePath");
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}      
+    	
+    	
+    	int Box[][];
+		//Box= (int[][]) s1.stringToValue("Grid");
+		Box=new int [200][300];
+		//-=-----------------------------testing array----------------
+		//JSONObject jsonObj = new JSONObject(s1);
+		JSONArray jsonArry1 = null;
+	    try {
+			 jsonArry1 = Save_Obj.getJSONArray("Grid");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    for(int i = 0; i<200; i++){
+	        JSONArray jsa1 = null;
+			try {
+				jsa1 = jsonArry1.getJSONArray(i);
+//				System.out.print("\n-----------------------\n");
+//				System.out.print(jsa1);
+//				System.out.print("\n-----------------\n");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	        for(int j = 0; j<jsa1.length();j++){
+	            try {
+					Box[i][j] = jsa1.getInt(j);
+					//System.out.print(jsa1.getInt(j)+" ");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+
+
+	    }
 
 
         Queue<String> q = new LinkedList<>();
@@ -400,13 +548,101 @@ public class ReadFromText implements DBInterface {
             out.close();
         } catch (IOException e) {
             System.out.println("COULD NOT LOG!!");
-            return -1;
+            try {
+				retObj.put("returnv", -1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            return retObj;
         }
-        return 0;
+        try {
+			retObj.put("returnv", 0);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return retObj;
     }
 
-    public int Load(int Box_Row[], int Box_Column[], int Box[][], int save_id, int Counter[], String FilePath) { // interface method (does not have a body)
+    public JSONObject Load(JSONObject Save_Obj) { // interface method (does not have a body)
+    	JSONObject retObj = new JSONObject();
+    	int save_id=0;
+    	try {
+    		save_id= Save_Obj.getInt("Save_ID");
+		} catch (JSONException e5) {
+			// TODO Auto-generated catch block
+			e5.printStackTrace();
+		}  
+    	int Box_Row[]=new int[1] ;
+    	try {
+			Box_Row[0]= Save_Obj.getInt("Row");
+		} catch (JSONException e5) {
+			// TODO Auto-generated catch block
+			e5.printStackTrace();
+		}      
+    	
+    	int Box_Column[]=new int[1] ;
+    	try {
+			Box_Column[0]= Save_Obj.getInt("Column");
+		} catch (JSONException e4) {
+			// TODO Auto-generated catch block
+			e4.printStackTrace();
+		}      
+    	
+    	int Counter[]=new int[1] ;
+    	try {
+			Counter[0]= Save_Obj.getInt("Counter");
+		} catch (JSONException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}      
+    	
+    	String FilePath= null;
+		try {
+			FilePath = Save_Obj.getString("FilePath");
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}      
+    	
+    	
+    	int Box[][];
+		//Box= (int[][]) s1.stringToValue("Grid");
+		Box=new int [200][300];
+		//-=-----------------------------testing array----------------
+		//JSONObject jsonObj = new JSONObject(s1);
+		JSONArray jsonArry1 = null;
+	    try {
+			 jsonArry1 = Save_Obj.getJSONArray("Grid");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    for(int i = 0; i<200; i++){
+	        JSONArray jsa1 = null;
+			try {
+				jsa1 = jsonArry1.getJSONArray(i);
+//				System.out.print("\n-----------------------\n");
+//				System.out.print(jsa1);
+//				System.out.print("\n-----------------\n");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	        for(int j = 0; j<jsa1.length();j++){
+	            try {
+					Box[i][j] = jsa1.getInt(j);
+					//System.out.print(jsa1.getInt(j)+" ");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
 
+
+	    }
         try {
         
             File myObj = new File(FilePath);
@@ -422,7 +658,13 @@ public class ReadFromText implements DBInterface {
                 Box_Column[0]=0;
                 Counter[0]=0;
                 myReader.close();
-                return 2;
+                try {
+					retObj.put("returnv", -1);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                return retObj;
             }
             else{}
 
@@ -446,7 +688,13 @@ public class ReadFromText implements DBInterface {
                     Box_Column[0]=0;
                     Counter[0]=0;
                     myReader.close();
-                    return 3;
+                    try {
+						retObj.put("returnv", 3);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                    return retObj;
                 }
                 
                 else {
@@ -513,13 +761,42 @@ public class ReadFromText implements DBInterface {
 
                 }
             }
-
+            
+            JSONArray jsonArray = new JSONArray();
+    	    for (int i=0;i<200;i++) {
+    	      JSONArray jarr = new JSONArray();
+    	      for (int j=0;j<300;j++) {
+    	        jarr.put(Integer.toString(Box[i][j])); // or some other conversion
+    	      }
+    	      jsonArray.put(jarr);
+    	    }
+    	    
+    	    try {
+    	    	retObj.put("Grid", jsonArray);
+    		} catch (JSONException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+            
+            
             myReader.close();
         } catch (FileNotFoundException e) {
-            return -1;
+        	try {
+				retObj.put("returnv", -1);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            return retObj;
         }
         
-        return 0;
+        try {
+			retObj.put("returnv", -0);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return retObj;
     }
 
 
